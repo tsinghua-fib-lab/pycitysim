@@ -10,7 +10,7 @@ release-pypi:
   image: registry.fiblab.net/general/dev:latest
   stage: build
   only:
-    - master
+    - main
   script:
     - bash scripts/init.sh
     - pip3 install build -U
@@ -27,7 +27,7 @@ build-docker-image:
     - dind
   stage: build
   only:
-    - master
+    - main
   script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA} -t ${CI_REGISTRY_IMAGE}:latest .
@@ -40,7 +40,7 @@ kubernetes-deploy:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   only:
-    - master
+    - main
   script:
     - kubectl config get-contexts
     - kubectl config use-context sim/kubernetes-agent:huawei
