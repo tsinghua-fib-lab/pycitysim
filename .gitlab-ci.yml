@@ -1,5 +1,7 @@
 variables:
-  GIT_SUBMODULE_STRATEGY: recursive
+  # https://setuptools-git-versioning.readthedocs.io/en/stable/ci.html
+  GIT_DEPTH: 0
+  VERSION_REGEX: /^v\d+\.\d+\.\d+.*$/
 
 stages:
   - build
@@ -9,11 +11,10 @@ release-pypi:
   # 以开发镜像作为执行环境
   image: registry.fiblab.net/general/dev:latest
   stage: build
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_TAG =~ $VERSION_REGEX
   script:
-    - bash scripts/init.sh
-    - pip3 install build -U
+    - pip3 install build setuptools-git-versioning -U
     - python3 -m build
     - |
       TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token \
@@ -26,8 +27,8 @@ build-docker-image:
   tags:
     - dind
   stage: build
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_TAG =~ $VERSION_REGEX
   script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA} -t ${CI_REGISTRY_IMAGE}:latest .
@@ -39,8 +40,8 @@ kubernetes-deploy:
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_TAG =~ $VERSION_REGEX
   script:
     - kubectl config get-contexts
     - kubectl config use-context sim/kubernetes-agent:huawei
