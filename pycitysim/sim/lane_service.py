@@ -23,8 +23,12 @@ class LaneService:
         self, req: lane_service.GetLaneRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.GetLaneResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.GetLaneRequest
+        获取Lane的信息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.GetLaneRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.GetLaneResponse
         """
         if type(req) != lane_service.GetLaneRequest:
@@ -36,8 +40,12 @@ class LaneService:
         self, req: lane_service.SetMaxVRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.SetMaxVResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.SetMaxVRequest
+        设置Lane的最大速度（限速）
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.SetMaxVRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.SetMaxVResponse
         """
         if type(req) != lane_service.SetMaxVRequest:

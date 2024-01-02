@@ -22,8 +22,12 @@ class SocialService:
         self, req: social_service.SendRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | social_service.SendResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.social.v1.SendRequest
+        发送消息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.social.v1.SendRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.social.v1.SendResponse
         """
         if type(req) != social_service.SendRequest:
@@ -35,8 +39,12 @@ class SocialService:
         self, req: social_service.ReceiveRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | social_service.ReceiveResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.social.v1.ReceiveRequest
+        接收消息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.social.v1.ReceiveRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.social.v1.ReceiveResponse
         """
         if type(req) != social_service.ReceiveRequest:

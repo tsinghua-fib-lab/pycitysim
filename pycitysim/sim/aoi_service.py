@@ -23,8 +23,12 @@ class AoiService:
         self, req: aoi_service.GetAoiRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | aoi_service.GetAoiResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.aoi.v1.GetAoiRequest
+        获取AOI信息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.aoi.v1.GetAoiRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.aoi.v1.GetAoiResponse
         """
         if type(req) != aoi_service.GetAoiRequest:

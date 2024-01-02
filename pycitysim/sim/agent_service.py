@@ -47,8 +47,12 @@ class AgentService:
         self, req: agent_service.GetAgentRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | agent_service.GetAgentResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentRequest
+        获取agent信息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentResponse
         """
         if type(req) != agent_service.GetAgentRequest:
@@ -62,8 +66,12 @@ class AgentService:
         self, req: agent_service.AddAgentRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | agent_service.AddAgentResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.AddAgentRequest
+        新增agent
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.AddAgentRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.AddAgentResponse
         """
         if type(req) != agent_service.AddAgentRequest:
@@ -77,8 +85,12 @@ class AgentService:
         self, req: agent_service.SetScheduleRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | agent_service.SetScheduleResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.SetScheduleRequest
+        修改agent的schedule
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.SetScheduleRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.SetScheduleResponse
         """
         if type(req) != agent_service.SetScheduleRequest:
@@ -97,8 +109,12 @@ class AgentService:
         Any, Any, dict[str, Any] | agent_service.GetAgentsByLongLatAreaResponse
     ]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentsByLongLatAreaRequest
+        获取特定区域内的agent
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentsByLongLatAreaRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentsByLongLatAreaResponse
         """
         if type(req) != agent_service.GetAgentsByLongLatAreaRequest:

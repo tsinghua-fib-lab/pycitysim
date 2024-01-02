@@ -22,8 +22,12 @@ class RoadService:
         self, req: road_service.GetRoadRequest | dict, dict_return: bool = True
     ) -> Coroutine[Any, Any, dict[str, Any] | road_service.GetRoadResponse]:
         """
-        gRPC接口：
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.road.v1.GetRoadRequest
+        查询道路信息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.road.v1.GetRoadRequest
+
+        Returns:
         - https://cityproto.sim.fiblab.net/#city.traffic.interaction.road.v1.GetRoadResponse
         """
         if type(req) != road_service.GetRoadRequest:
