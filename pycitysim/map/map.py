@@ -49,18 +49,96 @@ class Map:
         map_data = self._download_map_with_cache(
             mongo_uri, mongo_db, mongo_coll, cache_dir
         )
+
         self.header: dict = map_data["header"]
-        self.juncs: Dict[int, Any] = map_data["juncs"]
-        self.lanes: Dict[int, Any] = map_data["lanes"]
-        self.roads: Dict[int, Any] = map_data["roads"]
-        self.aois: Dict[int, Any] = map_data["aois"]
-        self.pois: Dict[int, Any] = map_data["pois"]
-        self.pois_with_tencent_id: Dict[str, Any] = {
+        """
+        地图元数据，包含如下属性:
+        - name (string): 城市道路名称，供标识数据集合的语义
+        - date (string): 城市道路数据的创建时间
+        - north (float): 道路数据的北边界坐标
+        - south (float): 道路数据的南边界坐标
+        - east (float): 道路数据的东边界坐标
+        - west (float): 道路数据的西边界坐标
+        - projection (string): PROJ.4 投影字符串，用以支持xy坐标到其他坐标系的转换
+        """
+
+        self.juncs: Dict[int, dict] = map_data["juncs"]
+        """
+        地图中的路口集合（junction），字典的值包含如下属性:
+        - id (int): 路口编号
+        - lane_ids (list[int]): 属于该路口的所有车道和人行道编号
+        """
+
+        self.lanes: Dict[int, dict] = map_data["lanes"]
+        """
+        地图中的车道集合（lane），字典的值包含如下属性:
+        - id (int): 车道编号
+        - type (int): 车道类型 (1:行车|2:步行)
+        - turn (int): 转向类型 (1:直行|2:左转|3: 右转|4: 掉头)
+        - max_speed (float): 最大速度限制(单位: m/s)
+        - length (float): 车道中心线的长度(单位: m)
+        - width (float): 车道的宽度(单位: m)
+        - center_line (list[XYPosition]): 车道中心线的形状
+        - predecessors (list[LaneConnection]): 前驱车道编号和连接类型。对于路口内的车道，最多只有一个前驱车道。对于 LANE_TYPE_DRIVING，连接类型必须是 LANE_CONNECTION_TYPE_TAIL。对于 LANE_TYPE_WALKING，两种连接类型都可能。
+        - successors (list[LaneConnection]): 后继车道编号和连接类型。对于路口内的车道，最多只有一个后继车道。对于 LANE_TYPE_DRIVING，连接类型必须是 LANE_CONNECTION_TYPE_HEAD。对于 LANE_TYPE_WALKING，两种连接类型都可能。
+        - left_lane_ids (list[int]): 左侧相邻车道的车道编号，从最近到最远排列。
+        - right_lane_ids (list[int]): 右侧相邻车道的车道编号，从最近到最远排列。
+        - parent_id (int): 车道所属的道路/路口编号。
+        - aoi_ids (list[int]): 与车道连接的 AOI 编号。
+        - shapely_xy (shapely.geometry.LineString): 车道中心线的形状（xy坐标系）
+        - shapely_lnglat (shapely.geometry.LineString): 车道中心线的形状（经纬度坐标系）
+        """
+
+        self.roads: Dict[int, dict] = map_data["roads"]
+        """
+        地图中的道路集合（road），字典的值包含如下属性:
+        - id (int): 道路编号
+        - lane_ids (list[int]): 道路所包含的车道和人行道编号
+        - external["highway"] (string): OSM中的道路等级标签
+        - external["name"] (string): 道路名称（不一定有）
+        """
+
+        self.aois: Dict[int, dict] = map_data["aois"]
+        """
+        地图中的AOI集合（aoi），字典的值包含如下属性:
+        - id (int): AOI编号
+        - positions (list[XYPosition]): 多边形空间范围
+        - area (float): 面积(单位: m2)
+        - external["population"] (int): worldpop人口
+        - driving_positions (list[LanePosition]): 和道路网中行车道的连接点
+        - walking_positions (list[LanePosition]): 和道路网中人行道的连接点
+        - driving_gates (list[XYPosition]): 和道路网中行车道的连接点对应的AOI边界上的位置
+        - walking_gates (list[XYPosition]): 和道路网中人行道的连接点对应的AOI边界上的位置
+        - land_use (Optional[int]): 用地类型(5:商服用地|6:工矿仓储用地|7:住宅用地|8:公共管理与公共服务用地|10:交通运输用地|12:其他)
+        - poi_ids (list[int]): 包含的POI列表
+        - shapely_xy (shapely.geometry.Polygon): AOI的形状（xy坐标系）
+        - shapely_lnglat (shapely.geometry.Polygon): AOI的形状（经纬度坐标系）
+        """
+
+        self.pois: Dict[int, dict] = map_data["pois"]
+        """
+        地图中的POI集合（poi），字典的值包含如下属性:
+        - id (int): POI编号
+        - name (string): POI名称
+        - category (string): POI类别编码
+        - position (XYPosition): POI位置
+        - aoi_id (int): POI所属的AOI编号
+        - external["tencent_poi_id"] (string): 腾讯地图的POI编号
+        """
+
+        self.pois_with_tencent_id: Dict[str, dict] = {
             poi["external"]["tencent_poi_id"]: poi
             for poi in self.pois.values()
             if "tencent_poi_id" in poi.get("external", {})
         }
+        """
+        地图中的POI集合，字典的值与self.pois相同，但是key为腾讯地图的POI编号
+        """
+
         self.projector: pyproj.Proj = map_data["projector"]
+        """
+        采用PROJ.4投影字符串创建的转换器，用以支持xy坐标到WGS84坐标系的转换
+        """
 
         self._poi_tree, self._poi_list = self._build_geo_index()
 
