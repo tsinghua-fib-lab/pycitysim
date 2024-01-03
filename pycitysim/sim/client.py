@@ -20,12 +20,8 @@ class CityClient:
         Args:
         - server_address (str): 模拟器server的地址
         """
-        uri = sidecar.get_service_uri(name)
-        interceptor = sidecar.add_watch_api_status(name)
-        aio_channel = grpc.aio.insecure_channel(
-            uri,
-            interceptors=[interceptor],  # type: ignore
-        )
+        url = sidecar.wait_url(name)
+        aio_channel = grpc.aio.insecure_channel(url)
         self._lane_service = LaneService(aio_channel)
         self._agent_service = AgentService(aio_channel)
         self._aoi_service = AoiService(aio_channel)
