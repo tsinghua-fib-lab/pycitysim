@@ -14,7 +14,6 @@ async def main():
     traffic_client = CityClient(s)
 
     # 进行前期准备工作
-    s.notify_init_ready()
     s.init()
     for i in range(100, -1, -1):
         logging.info("step %d", i)
@@ -25,7 +24,7 @@ async def main():
             resp = await traffic_client.lane_service.GetLane({"lane_ids": [0]})
             print("GetLane:", resp)
             resp = await traffic_client.lane_service.SetMaxV(
-                {"lane_id": 0, "max_speed": 10}
+                {"lane_id": 0, "max_v": 10}
             )
             print("SetMaxV:", resp)
             resp = await traffic_client.agent_service.GetAgent({"agent_id": 0})
