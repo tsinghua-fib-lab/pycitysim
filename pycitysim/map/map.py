@@ -1,22 +1,21 @@
-from typing import List, Optional, Dict, Any, Tuple, Union
-import os
 import gc
-from copy import deepcopy
-import warnings
+import os
 import pickle
-import pyproj
+import warnings
+from copy import deepcopy
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import numpy as np
-from pymongo import MongoClient
+import pyproj
 import shapely
-from shapely.ops import substring
-from shapely.geometry import Point, Polygon, LineString
 from geojson import Feature
 from google.protobuf.json_format import ParseDict
 from pycityproto.city.geo.v2 import geo_pb2
 from pycityproto.city.routing.v2 import routing_pb2
-from pycityproto.city.routing.v2 import (
-    routing_service_pb2 as routing_service,
-)
+from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
+from pymongo import MongoClient
+from shapely.geometry import LineString, Point, Polygon
+from shapely.ops import substring
 
 __all__ = ["Map"]
 

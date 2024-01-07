@@ -1,14 +1,10 @@
-from typing import Awaitable, cast
-from threading import Lock
-from time import sleep
 import logging
+from time import sleep
+from typing import cast
 
 import grpc
-
-from pycityproto.city.sync.v1 import (
-    sync_service_pb2 as sync_service,
-    sync_service_pb2_grpc as sync_grpc,
-)
+from pycityproto.city.sync.v1 import sync_service_pb2 as sync_service
+from pycityproto.city.sync.v1 import sync_service_pb2_grpc as sync_grpc
 
 __all__ = ["OnlyClientSidecar"]
 

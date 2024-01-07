@@ -1,11 +1,12 @@
 import grpc
 
 from ..sidecar import OnlyClientSidecar
-from .lane_service import LaneService
 from .agent_service import AgentService
 from .aoi_service import AoiService
+from .lane_service import LaneService
 from .road_service import RoadService
 from .social_service import SocialService
+from .economy_services import EconomyPersonService, EconomyOrgService
 
 __all__ = ["CityClient"]
 
@@ -13,7 +14,7 @@ __all__ = ["CityClient"]
 class CityClient:
     """模拟器接口"""
 
-    NAME = "traffic"
+    NAME = "city"
 
     def __init__(self, sidecar: OnlyClientSidecar, name: str = NAME):
         """
@@ -27,6 +28,8 @@ class CityClient:
         self._aoi_service = AoiService(aio_channel)
         self._road_service = RoadService(aio_channel)
         self._social_service = SocialService(aio_channel)
+        self._economy_person_service = EconomyPersonService(aio_channel)
+        self._economy_org_service = EconomyOrgService(aio_channel)
 
     @property
     def lane_service(self):
@@ -52,3 +55,13 @@ class CityClient:
     def social_service(self):
         """模拟器social服务子模块"""
         return self._social_service
+
+    @property
+    def economy_person_service(self):
+        """模拟器经济服务（个人）子模块"""
+        return self._economy_person_service
+
+    @property
+    def economy_org_service(self):
+        """模拟器经济服务（组织）子模块"""
+        return self._economy_org_service

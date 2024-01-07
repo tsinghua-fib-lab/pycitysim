@@ -1,6 +1,7 @@
-from typing import Optional, List, Tuple
-from pymongo import MongoClient
+from typing import List, Optional, Tuple
+
 from lru import LRU
+from pymongo import MongoClient
 
 __all__ = ["UrbanKG"]
 

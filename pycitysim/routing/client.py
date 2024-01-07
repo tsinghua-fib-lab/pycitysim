@@ -1,12 +1,10 @@
-from typing import Awaitable, cast, Coroutine, Any
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
+from pycityproto.city.routing.v2 import routing_service_pb2_grpc as routing_grpc
 
-from pycityproto.city.routing.v2 import (
-    routing_service_pb2 as routing_service,
-    routing_service_pb2_grpc as routing_grpc,
-)
 from ..utils.protobuf import async_parser
 
 __all__ = [

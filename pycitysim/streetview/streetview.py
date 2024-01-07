@@ -1,8 +1,9 @@
-from typing import Optional, Tuple
 from io import BytesIO
+from typing import Optional, Tuple
+
 from obs import ObsClient
-from pymongo import MongoClient
 from PIL import Image
+from pymongo import MongoClient
 
 __all__ = ["StreetViews"]
 

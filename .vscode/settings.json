@@ -10,8 +10,9 @@
         "Protobuf",
         "protos",
         "pycityproto",
-        "pymongo",
         "pycitysim",
+        "pymongo",
+        "pyproj",
         "tsingroc",
         "wolong"
     ],

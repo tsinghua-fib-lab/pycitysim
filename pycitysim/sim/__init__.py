@@ -2,9 +2,10 @@
 模拟器gRPC接入客户端
 """
 
-from .client import CityClient
 from .agent_service import AgentService
 from .aoi_service import AoiService
+from .client import CityClient
+from .economy_services import EconomyOrgService, EconomyPersonService
 from .lane_service import LaneService
 from .road_service import RoadService
 from .social_service import SocialService
@@ -16,4 +17,6 @@ __all__ = [
     "LaneService",
     "RoadService",
     "SocialService",
+    "EconomyPersonService",
+    "EconomyOrgService",
 ]

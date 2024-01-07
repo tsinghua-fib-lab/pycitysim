@@ -1,13 +1,11 @@
-from typing import Any, Awaitable, Coroutine, Union, cast
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.agent.v2 import agent_pb2 as agent_pb2
+from pycityproto.city.agent.v2 import agent_service_pb2 as agent_service
+from pycityproto.city.agent.v2 import agent_service_pb2_grpc as agent_grpc
 
-from pycityproto.city.agent.v2 import agent_pb2
-from pycityproto.city.traffic.interaction.agent.v2 import (
-    agent_service_pb2 as agent_service,
-    agent_service_pb2_grpc as agent_grpc,
-)
 from ..utils.protobuf import async_parser
 
 __all__ = ["AgentService"]
@@ -50,10 +48,10 @@ class AgentService:
         获取agent信息
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.agent.v2.GetAgentRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentResponse
+        - https://cityproto.sim.fiblab.net/#city.agent.v2.GetAgentResponse
         """
         if type(req) != agent_service.GetAgentRequest:
             req = ParseDict(req, agent_service.GetAgentRequest())
@@ -69,10 +67,10 @@ class AgentService:
         新增agent
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.AddAgentRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.agent.v2.AddAgentRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.AddAgentResponse
+        - https://cityproto.sim.fiblab.net/#city.agent.v2.AddAgentResponse
         """
         if type(req) != agent_service.AddAgentRequest:
             req = ParseDict(req, agent_service.AddAgentRequest())
@@ -88,10 +86,10 @@ class AgentService:
         修改agent的schedule
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.SetScheduleRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.agent.v2.SetScheduleRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.SetScheduleResponse
+        - https://cityproto.sim.fiblab.net/#city.agent.v2.SetScheduleResponse
         """
         if type(req) != agent_service.SetScheduleRequest:
             req = ParseDict(req, agent_service.SetScheduleRequest())
@@ -112,10 +110,10 @@ class AgentService:
         获取特定区域内的agent
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentsByLongLatAreaRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.agent.v2.GetAgentsByLongLatAreaRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.agent.v2.GetAgentsByLongLatAreaResponse
+        - https://cityproto.sim.fiblab.net/#city.agent.v2.GetAgentsByLongLatAreaResponse
         """
         if type(req) != agent_service.GetAgentsByLongLatAreaRequest:
             req = ParseDict(req, agent_service.GetAgentsByLongLatAreaRequest())

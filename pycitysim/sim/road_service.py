@@ -1,12 +1,10 @@
-from typing import Awaitable, cast, Coroutine, Any
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.map.v2 import road_service_pb2 as road_service
+from pycityproto.city.map.v2 import road_service_pb2_grpc as road_grpc
 
-from pycityproto.city.traffic.interaction.road.v1 import (
-    road_service_pb2 as road_service,
-    road_service_pb2_grpc as road_grpc,
-)
 from ..utils.protobuf import async_parser
 
 __all__ = ["RoadService"]
@@ -25,10 +23,10 @@ class RoadService:
         查询道路信息
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.road.v1.GetRoadRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetRoadRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.road.v1.GetRoadResponse
+        - https://cityproto.sim.fiblab.net/#city.map.v2.GetRoadResponse
         """
         if type(req) != road_service.GetRoadRequest:
             req = ParseDict(req, road_service.GetRoadRequest())

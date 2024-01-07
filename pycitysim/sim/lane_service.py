@@ -1,13 +1,10 @@
-from typing import Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.map.v2 import lane_service_pb2 as lane_service
+from pycityproto.city.map.v2 import lane_service_pb2_grpc as lane_grpc
 
-from pycityproto.city.traffic.interaction.lane.v1 import (
-    lane_service_pb2 as lane_service,
-    lane_service_pb2_grpc as lane_grpc,
-)
-from traitlets import Any
 from ..utils.protobuf import async_parser
 
 __all__ = ["LaneService"]
@@ -26,29 +23,31 @@ class LaneService:
         获取Lane的信息
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.GetLaneRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.GetLaneResponse
+        - https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneResponse
         """
         if type(req) != lane_service.GetLaneRequest:
             req = ParseDict(req, lane_service.GetLaneRequest())
         res = cast(Awaitable[lane_service.GetLaneResponse], self._aio_stub.GetLane(req))
         return async_parser(res, dict_return)
 
-    def SetMaxV(
-        self, req: lane_service.SetMaxVRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.SetMaxVResponse]:
+    def SetLaneMaxV(
+        self, req: lane_service.SetLaneMaxVRequest | dict, dict_return: bool = True
+    ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.SetLaneMaxVResponse]:
         """
         设置Lane的最大速度（限速）
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.SetMaxVRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.SetLaneMaxVRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.lane.v1.SetMaxVResponse
+        - https://cityproto.sim.fiblab.net/#city.map.v2.SetLaneMaxVResponse
         """
-        if type(req) != lane_service.SetMaxVRequest:
-            req = ParseDict(req, lane_service.SetMaxVRequest())
-        res = cast(Awaitable[lane_service.SetMaxVResponse], self._aio_stub.SetMaxV(req))
+        if type(req) != lane_service.SetLaneMaxVRequest:
+            req = ParseDict(req, lane_service.SetLaneMaxVRequest())
+        res = cast(
+            Awaitable[lane_service.SetLaneMaxVResponse], self._aio_stub.SetLaneMaxV(req)
+        )
         return async_parser(res, dict_return)

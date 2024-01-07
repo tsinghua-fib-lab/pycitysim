@@ -1,12 +1,10 @@
-from typing import Awaitable, cast, Coroutine, Any
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.social.v1 import social_service_pb2 as social_service
+from pycityproto.city.social.v1 import social_service_pb2_grpc as social_grpc
 
-from pycityproto.city.social.v1 import (
-    social_service_pb2 as social_service,
-    social_service_pb2_grpc as social_grpc,
-)
 from ..utils.protobuf import async_parser
 
 __all__ = ["SocialService"]

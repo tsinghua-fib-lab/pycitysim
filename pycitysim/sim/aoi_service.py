@@ -1,13 +1,10 @@
-from typing import Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast
+
 import grpc
-
 from google.protobuf.json_format import ParseDict
+from pycityproto.city.map.v2 import aoi_service_pb2 as aoi_service
+from pycityproto.city.map.v2 import aoi_service_pb2_grpc as aoi_grpc
 
-from pycityproto.city.traffic.interaction.aoi.v1 import (
-    aoi_service_pb2 as aoi_service,
-    aoi_service_pb2_grpc as aoi_grpc,
-)
-from traitlets import Any
 from ..utils.protobuf import async_parser
 
 __all__ = ["AoiService"]
@@ -26,10 +23,10 @@ class AoiService:
         获取AOI信息
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.traffic.interaction.aoi.v1.GetAoiRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetAoiRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.traffic.interaction.aoi.v1.GetAoiResponse
+        - https://cityproto.sim.fiblab.net/#city.map.v2.GetAoiResponse
         """
         if type(req) != aoi_service.GetAoiRequest:
             req = ParseDict(req, aoi_service.GetAoiRequest())
