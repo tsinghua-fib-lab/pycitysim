@@ -6,6 +6,7 @@ from .agent_service import AgentService
 from .aoi_service import AoiService
 from .client import CityClient
 from .economy_services import EconomyOrgService, EconomyPersonService
+from .event_service import EventService
 from .lane_service import LaneService
 from .road_service import RoadService
 from .social_service import SocialService
@@ -19,4 +20,5 @@ __all__ = [
     "SocialService",
     "EconomyPersonService",
     "EconomyOrgService",
+    "EventService",
 ]

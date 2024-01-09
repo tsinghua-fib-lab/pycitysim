@@ -23,7 +23,7 @@ async def main():
         if i == 90:
             resp = await traffic_client.lane_service.GetLane({"lane_ids": [0]})
             print("GetLane:", resp)
-            resp = await traffic_client.lane_service.SetMaxV(
+            resp = await traffic_client.lane_service.SetLaneMaxV(
                 {"lane_id": 0, "max_v": 10}
             )
             print("SetMaxV:", resp)

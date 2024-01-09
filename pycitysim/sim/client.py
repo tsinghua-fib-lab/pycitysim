@@ -7,6 +7,7 @@ from .lane_service import LaneService
 from .road_service import RoadService
 from .social_service import SocialService
 from .economy_services import EconomyPersonService, EconomyOrgService
+from .event_service import EventService
 
 __all__ = ["CityClient"]
 
@@ -30,6 +31,7 @@ class CityClient:
         self._social_service = SocialService(aio_channel)
         self._economy_person_service = EconomyPersonService(aio_channel)
         self._economy_org_service = EconomyOrgService(aio_channel)
+        self._event_service = EventService(aio_channel)
 
     @property
     def lane_service(self):
@@ -65,3 +67,8 @@ class CityClient:
     def economy_org_service(self):
         """模拟器经济服务（组织）子模块"""
         return self._economy_org_service
+
+    @property
+    def event_service(self):
+        """模拟器事件服务子模块"""
+        return self._event_service
