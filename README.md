@@ -5,7 +5,7 @@ protos 中接口的 python 客户端实现
 ## 安装
 
 ```shell
-pip install pycitysim --extra-index-url https://__token__:glpat-fq6C-NTr45Z_Te4BV4kC@git.fiblab.net/api/v4/projects/88/packages/pypi/simple
+pip install pycitysim --extra-index-url https://__token__:glpat-fq6C-NTr45Z_Te4BV4kC@git.fiblab.net/api/v4/projects/88/packages/pypi/simple --extra-index-url https://__token__:glpat-fq6C-NTr45Z_Te4BV4kC@git.fiblab.net/api/v4/projects/26/packages/pypi/simple
 ```
 
 安装 grpcio 的过程中，如果出现
