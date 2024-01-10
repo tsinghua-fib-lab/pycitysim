@@ -5,7 +5,7 @@ from google.protobuf.json_format import ParseDict
 from pycityproto.city.event.v2 import event_service_pb2 as event_service
 from pycityproto.city.event.v2 import event_service_pb2_grpc as event_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["EventService"]
 
@@ -36,7 +36,7 @@ class EventService:
             Awaitable[event_service.GetEventsByTopicResponse],
             self._aio_stub.GetEventsByTopic(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def ResolveEvents(
         self, req: event_service.ResolveEventsRequest | dict, dict_return: bool = True
@@ -56,4 +56,4 @@ class EventService:
             Awaitable[event_service.ResolveEventsResponse],
             self._aio_stub.ResolveEvents(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

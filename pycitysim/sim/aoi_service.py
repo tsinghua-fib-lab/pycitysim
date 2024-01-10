@@ -5,7 +5,7 @@ from google.protobuf.json_format import ParseDict
 from pycityproto.city.map.v2 import aoi_service_pb2 as aoi_service
 from pycityproto.city.map.v2 import aoi_service_pb2_grpc as aoi_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["AoiService"]
 
@@ -31,4 +31,4 @@ class AoiService:
         if type(req) != aoi_service.GetAoiRequest:
             req = ParseDict(req, aoi_service.GetAoiRequest())
         res = cast(Awaitable[aoi_service.GetAoiResponse], self._aio_stub.GetAoi(req))
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

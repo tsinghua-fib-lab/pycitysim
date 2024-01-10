@@ -5,7 +5,7 @@ from google.protobuf.json_format import ParseDict
 from pycityproto.city.map.v2 import road_service_pb2 as road_service
 from pycityproto.city.map.v2 import road_service_pb2_grpc as road_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["RoadService"]
 
@@ -31,4 +31,4 @@ class RoadService:
         if type(req) != road_service.GetRoadRequest:
             req = ParseDict(req, road_service.GetRoadRequest())
         res = cast(Awaitable[road_service.GetRoadResponse], self._aio_stub.GetRoad(req))
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

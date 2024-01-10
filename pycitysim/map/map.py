@@ -672,7 +672,7 @@ class Map:
 
     def query_pois(
         self,
-        center: Tuple[float, float],
+        center: Tuple[float, float] | Point,
         radius: float,
         category_prefix: str,
         limit: Optional[int] = None,
@@ -689,16 +689,16 @@ class Map:
         Returns
         - List[Tuple[Any, float]]: poi列表，每个元素为（poi, 距离）
         """
-
-        point = Point(center)
+        if not isinstance(center, Point):
+            center = Point(center)
         # 获取半径内的poi
-        indices = self._poi_tree.query(point.buffer(radius))
+        indices = self._poi_tree.query(center.buffer(radius))
         # 过滤掉不满足类别前缀的poi
         pois = []
         for index in indices:
             poi = self._poi_list[index]
             if poi["category"].startswith(category_prefix):
-                distance = point.distance(poi["shapely_xy"])
+                distance = center.distance(poi["shapely_xy"])
                 pois.append((poi, distance))
         # 按照距离排序
         pois = sorted(pois, key=lambda x: x[1])

@@ -6,7 +6,7 @@ from pycityproto.city.agent.v2 import agent_pb2 as agent_pb2
 from pycityproto.city.agent.v2 import agent_service_pb2 as agent_service
 from pycityproto.city.agent.v2 import agent_service_pb2_grpc as agent_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["AgentService"]
 
@@ -58,7 +58,7 @@ class AgentService:
         res = cast(
             Awaitable[agent_service.GetAgentResponse], self._aio_stub.GetAgent(req)
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def AddAgent(
         self, req: agent_service.AddAgentRequest | dict, dict_return: bool = True
@@ -77,7 +77,7 @@ class AgentService:
         res = cast(
             Awaitable[agent_service.AddAgentResponse], self._aio_stub.AddAgent(req)
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def SetSchedule(
         self, req: agent_service.SetScheduleRequest | dict, dict_return: bool = True
@@ -97,7 +97,7 @@ class AgentService:
             Awaitable[agent_service.SetScheduleResponse],
             self._aio_stub.SetSchedule(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def GetAgentsByLongLatArea(
         self,
@@ -121,4 +121,4 @@ class AgentService:
             Awaitable[agent_service.GetAgentsByLongLatAreaResponse],
             self._aio_stub.GetAgentsByLongLatArea(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

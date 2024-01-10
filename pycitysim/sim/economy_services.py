@@ -7,7 +7,7 @@ from pycityproto.city.economy.v1 import org_service_pb2_grpc as org_grpc
 from pycityproto.city.economy.v1 import person_service_pb2 as person_service
 from pycityproto.city.economy.v1 import person_service_pb2_grpc as person_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["EconomyPersonService", "EconomyOrgService"]
 
@@ -35,7 +35,7 @@ class EconomyPersonService:
         res = cast(
             Awaitable[person_service.GetPersonResponse], self._aio_stub.GetPerson(req)
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def UpdatePersonMoney(
         self,
@@ -57,7 +57,7 @@ class EconomyPersonService:
             Awaitable[person_service.UpdatePersonMoneyResponse],
             self._aio_stub.UpdatePersonMoney(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
 
 class EconomyOrgService:
@@ -81,7 +81,7 @@ class EconomyOrgService:
         if type(req) != org_service.GetOrgRequest:
             req = ParseDict(req, org_service.GetOrgRequest())
         res = cast(Awaitable[org_service.GetOrgResponse], self._aio_stub.GetOrg(req))
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def UpdateOrgMoney(
         self,
@@ -103,7 +103,7 @@ class EconomyOrgService:
             Awaitable[org_service.UpdateOrgMoneyResponse],
             self._aio_stub.UpdateOrgMoney(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def UpdateOrgGoods(
         self,
@@ -125,7 +125,7 @@ class EconomyOrgService:
             Awaitable[org_service.UpdateOrgGoodsResponse],
             self._aio_stub.UpdateOrgGoods(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def UpdateOrgEmployee(
         self,
@@ -147,7 +147,7 @@ class EconomyOrgService:
             Awaitable[org_service.UpdateOrgEmployeeResponse],
             self._aio_stub.UpdateOrgEmployee(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def UpdateOrgJob(
         self,
@@ -169,4 +169,4 @@ class EconomyOrgService:
             Awaitable[org_service.UpdateOrgJobResponse],
             self._aio_stub.UpdateOrgJob(req),
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

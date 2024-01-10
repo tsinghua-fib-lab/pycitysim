@@ -5,7 +5,7 @@ from google.protobuf.json_format import ParseDict
 from pycityproto.city.social.v1 import social_service_pb2 as social_service
 from pycityproto.city.social.v1 import social_service_pb2_grpc as social_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = ["SocialService"]
 
@@ -31,7 +31,7 @@ class SocialService:
         if type(req) != social_service.SendRequest:
             req = ParseDict(req, social_service.SendRequest())
         res = cast(Awaitable[social_service.SendResponse], self._aio_stub.Send(req))
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
 
     def Receive(
         self, req: social_service.ReceiveRequest | dict, dict_return: bool = True
@@ -50,4 +50,4 @@ class SocialService:
         res = cast(
             Awaitable[social_service.ReceiveResponse], self._aio_stub.Receive(req)
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)

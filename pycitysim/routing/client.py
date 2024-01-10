@@ -5,7 +5,7 @@ from google.protobuf.json_format import ParseDict
 from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
 from pycityproto.city.routing.v2 import routing_service_pb2_grpc as routing_grpc
 
-from ..utils.protobuf import async_parser
+from ..utils.protobuf import async_parse
 
 __all__ = [
     "RoutingClient",
@@ -42,4 +42,4 @@ class RoutingClient:
         res = cast(
             Awaitable[routing_service.GetRouteResponse], self._aio_stub.GetRoute(req)
         )
-        return async_parser(res, dict_return)
+        return async_parse(res, dict_return)
