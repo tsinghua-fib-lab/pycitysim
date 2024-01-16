@@ -53,3 +53,27 @@ class LaneService:
             Awaitable[lane_service.SetLaneMaxVResponse], self._aio_stub.SetLaneMaxV(req)
         )
         return async_parse(res, dict_return)
+
+    def GetLaneByLongLatBBox(
+        self,
+        req: Union[lane_service.GetLaneByLongLatBBoxRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], lane_service.GetLaneByLongLatBBoxResponse]
+    ]:
+        """
+        获取特定区域内的Lane的信息
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneByLongLatBBoxRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneByLongLatBBoxResponse
+        """
+        if type(req) != lane_service.GetLaneByLongLatBBoxRequest:
+            req = ParseDict(req, lane_service.GetLaneByLongLatBBoxRequest())
+        res = cast(
+            Awaitable[lane_service.GetLaneByLongLatBBoxResponse],
+            self._aio_stub.GetLaneByLongLatBBox(req),
+        )
+        return async_parse(res, dict_return)

@@ -113,26 +113,26 @@ class PersonService:
         )
         return async_parse(res, dict_return)
 
-    def GetPersonsByLongLatArea(
+    def GetPersonByLongLatBBox(
         self,
-        req: Union[person_service.GetPersonsByLongLatAreaRequest, dict],
+        req: Union[person_service.GetPersonByLongLatBBoxRequest, dict],
         dict_return: bool = True,
     ) -> Coroutine[
-        Any, Any, Union[Dict[str, Any], person_service.GetPersonsByLongLatAreaResponse]
+        Any, Any, Union[Dict[str, Any], person_service.GetPersonByLongLatBBoxResponse]
     ]:
         """
         获取特定区域内的person
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonsByLongLatAreaRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonByLongLatBBoxRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.person.1.GetPersonsByLongLatAreaResponse
+        - https://cityproto.sim.fiblab.net/#city.person.1.GetPersonByLongLatBBoxResponse
         """
-        if type(req) != person_service.GetPersonsByLongLatAreaRequest:
-            req = ParseDict(req, person_service.GetPersonsByLongLatAreaRequest())
+        if type(req) != person_service.GetPersonByLongLatBBoxRequest:
+            req = ParseDict(req, person_service.GetPersonByLongLatBBoxRequest())
         res = cast(
-            Awaitable[person_service.GetPersonsByLongLatAreaResponse],
-            self._aio_stub.GetPersonsByLongLatArea(req),
+            Awaitable[person_service.GetPersonByLongLatBBoxResponse],
+            self._aio_stub.GetPersonByLongLatBBox(req),
         )
         return async_parse(res, dict_return)

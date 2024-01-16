@@ -2,6 +2,7 @@ import warnings
 import grpc
 
 from ..sidecar import OnlyClientSidecar
+from .clock_service import ClockService
 from .person_service import PersonService
 from .aoi_service import AoiService
 from .lane_service import LaneService
@@ -25,6 +26,7 @@ class CityClient:
         """
         url = sidecar.wait_url(name)
         aio_channel = grpc.aio.insecure_channel(url)
+        self._clock_service = ClockService(aio_channel)
         self._lane_service = LaneService(aio_channel)
         self._person_service = PersonService(aio_channel)
         self._aoi_service = AoiService(aio_channel)
@@ -33,6 +35,11 @@ class CityClient:
         self._economy_person_service = EconomyPersonService(aio_channel)
         self._economy_org_service = EconomyOrgService(aio_channel)
         self._event_service = EventService(aio_channel)
+
+    @property
+    def clock_service(self):
+        """模拟器时间服务子模块"""
+        return self._clock_service
 
     @property
     def lane_service(self):
