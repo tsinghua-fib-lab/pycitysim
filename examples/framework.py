@@ -27,8 +27,8 @@ async def main():
                 {"lane_id": 0, "max_v": 10}
             )
             print("SetMaxV:", resp)
-            resp = await traffic_client.agent_service.GetAgent({"agent_id": 0})
-            print("GetAgent:", resp)
+            resp = await traffic_client.person_service.GetPerson({"person_id": 0})
+            print("GetPerson:", resp)
             resp = await traffic_client.road_service.GetRoad(
                 {"road_ids": [2_0000_0000, 2_0000_0001]}
             )

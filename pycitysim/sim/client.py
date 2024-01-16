@@ -1,7 +1,8 @@
+import warnings
 import grpc
 
 from ..sidecar import OnlyClientSidecar
-from .agent_service import AgentService
+from .person_service import PersonService
 from .aoi_service import AoiService
 from .lane_service import LaneService
 from .road_service import RoadService
@@ -25,7 +26,7 @@ class CityClient:
         url = sidecar.wait_url(name)
         aio_channel = grpc.aio.insecure_channel(url)
         self._lane_service = LaneService(aio_channel)
-        self._agent_service = AgentService(aio_channel)
+        self._person_service = PersonService(aio_channel)
         self._aoi_service = AoiService(aio_channel)
         self._road_service = RoadService(aio_channel)
         self._social_service = SocialService(aio_channel)
@@ -40,8 +41,19 @@ class CityClient:
 
     @property
     def agent_service(self):
+        """
+        模拟器智能体服务子模块（已弃用，请使用.person_service）
+        """
+        warnings.warn(
+            "agent_service is deprecated, use person_service instead",
+            DeprecationWarning,
+        )
+        return self._person_service
+
+    @property
+    def person_service(self):
         """模拟器智能体服务子模块"""
-        return self._agent_service
+        return self._person_service
 
     @property
     def aoi_service(self):
