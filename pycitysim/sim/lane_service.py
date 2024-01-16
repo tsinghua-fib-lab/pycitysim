@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -17,8 +17,8 @@ class LaneService:
         self._aio_stub = lane_grpc.LaneServiceStub(aio_channel)
 
     def GetLane(
-        self, req: lane_service.GetLaneRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.GetLaneResponse]:
+        self, req: Union[lane_service.GetLaneRequest, dict], dict_return: bool = True
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], lane_service.GetLaneResponse]]:
         """
         获取Lane的信息
 
@@ -34,8 +34,10 @@ class LaneService:
         return async_parse(res, dict_return)
 
     def SetLaneMaxV(
-        self, req: lane_service.SetLaneMaxVRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | lane_service.SetLaneMaxVResponse]:
+        self,
+        req: Union[lane_service.SetLaneMaxVRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], lane_service.SetLaneMaxVResponse]]:
         """
         设置Lane的最大速度（限速）
 

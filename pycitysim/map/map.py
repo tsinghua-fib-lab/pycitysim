@@ -672,7 +672,7 @@ class Map:
 
     def query_pois(
         self,
-        center: Tuple[float, float] | Point,
+        center: Union[Tuple[float, float], Point],
         radius: float,
         category_prefix: str,
         limit: Optional[int] = None,

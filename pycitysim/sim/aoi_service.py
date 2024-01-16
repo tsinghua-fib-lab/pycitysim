@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -17,8 +17,8 @@ class AoiService:
         self._aio_stub = aoi_grpc.AoiServiceStub(aio_channel)
 
     def GetAoi(
-        self, req: aoi_service.GetAoiRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | aoi_service.GetAoiResponse]:
+        self, req: Union[aoi_service.GetAoiRequest, dict], dict_return: bool = True
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], aoi_service.GetAoiResponse]]:
         """
         获取AOI信息
 

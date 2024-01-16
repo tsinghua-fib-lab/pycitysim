@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -17,8 +17,8 @@ class SocialService:
         self._aio_stub = social_grpc.SocialServiceStub(aio_channel)
 
     def Send(
-        self, req: social_service.SendRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | social_service.SendResponse]:
+        self, req: Union[social_service.SendRequest, dict], dict_return: bool = True
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], social_service.SendResponse]]:
         """
         发送消息
 
@@ -34,8 +34,8 @@ class SocialService:
         return async_parse(res, dict_return)
 
     def Receive(
-        self, req: social_service.ReceiveRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | social_service.ReceiveResponse]:
+        self, req: Union[social_service.ReceiveRequest, dict], dict_return: bool = True
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], social_service.ReceiveResponse]]:
         """
         接收消息
 

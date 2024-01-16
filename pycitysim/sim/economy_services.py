@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -19,8 +19,10 @@ class EconomyPersonService:
         self._aio_stub = person_grpc.PersonServiceStub(aio_channel)
 
     def GetPerson(
-        self, req: person_service.GetPersonRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | person_service.GetPersonResponse]:
+        self,
+        req: Union[person_service.GetPersonRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.GetPersonResponse]]:
         """
         批量查询人的经济情况（资金、雇佣关系）
 
@@ -39,9 +41,11 @@ class EconomyPersonService:
 
     def UpdatePersonMoney(
         self,
-        req: person_service.UpdatePersonMoneyRequest | dict,
+        req: Union[person_service.UpdatePersonMoneyRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | person_service.UpdatePersonMoneyResponse]:
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], person_service.UpdatePersonMoneyResponse]
+    ]:
         """
         批量修改人的资金
 
@@ -67,8 +71,8 @@ class EconomyOrgService:
         self._aio_stub = org_grpc.OrgServiceStub(aio_channel)
 
     def GetOrg(
-        self, req: org_service.GetOrgRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | org_service.GetOrgResponse]:
+        self, req: Union[org_service.GetOrgRequest, dict], dict_return: bool = True
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.GetOrgResponse]]:
         """
         批量查询组织的经济情况（员工、岗位、资金、货物）
 
@@ -85,9 +89,9 @@ class EconomyOrgService:
 
     def UpdateOrgMoney(
         self,
-        req: org_service.UpdateOrgMoneyRequest | dict,
+        req: Union[org_service.UpdateOrgMoneyRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | org_service.UpdateOrgMoneyResponse]:
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgMoneyResponse]]:
         """
         批量修改组织的资金
 
@@ -107,9 +111,9 @@ class EconomyOrgService:
 
     def UpdateOrgGoods(
         self,
-        req: org_service.UpdateOrgGoodsRequest | dict,
+        req: Union[org_service.UpdateOrgGoodsRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | org_service.UpdateOrgGoodsResponse]:
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgGoodsResponse]]:
         """
         批量修改组织的货物
 
@@ -129,9 +133,11 @@ class EconomyOrgService:
 
     def UpdateOrgEmployee(
         self,
-        req: org_service.UpdateOrgEmployeeRequest | dict,
+        req: Union[org_service.UpdateOrgEmployeeRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | org_service.UpdateOrgEmployeeResponse]:
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], org_service.UpdateOrgEmployeeResponse]
+    ]:
         """
         批量修改组织的员工
 
@@ -151,9 +157,9 @@ class EconomyOrgService:
 
     def UpdateOrgJob(
         self,
-        req: org_service.UpdateOrgJobRequest | dict,
+        req: Union[org_service.UpdateOrgJobRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | org_service.UpdateOrgJobResponse]:
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgJobResponse]]:
         """
         批量修改组织的岗位
 

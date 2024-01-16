@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -25,8 +25,10 @@ class RoutingClient:
         self._aio_stub = routing_grpc.RoutingServiceStub(aio_channel)
 
     def GetRoute(
-        self, req: routing_service.GetRouteRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | routing_service.GetRouteResponse]:
+        self,
+        req: Union[routing_service.GetRouteRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], routing_service.GetRouteResponse]]:
         """
         请求导航
 

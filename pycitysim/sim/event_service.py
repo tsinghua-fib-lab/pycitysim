@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 
 import grpc
 from google.protobuf.json_format import ParseDict
@@ -18,9 +18,11 @@ class EventService:
 
     def GetEventsByTopic(
         self,
-        req: event_service.GetEventsByTopicRequest | dict,
+        req: Union[event_service.GetEventsByTopicRequest, dict],
         dict_return: bool = True,
-    ) -> Coroutine[Any, Any, dict[str, Any] | event_service.GetEventsByTopicResponse]:
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], event_service.GetEventsByTopicResponse]
+    ]:
         """
         按照topic查询事件
 
@@ -39,8 +41,12 @@ class EventService:
         return async_parse(res, dict_return)
 
     def ResolveEvents(
-        self, req: event_service.ResolveEventsRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | event_service.ResolveEventsResponse]:
+        self,
+        req: Union[event_service.ResolveEventsRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], event_service.ResolveEventsResponse]
+    ]:
         """
         确认事件已被处理
 

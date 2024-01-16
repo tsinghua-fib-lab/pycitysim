@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Coroutine, cast
+from typing import Any, Awaitable, Coroutine, cast, Union, Dict
 import warnings
 
 import grpc
@@ -50,8 +50,10 @@ class PersonService:
         return person
 
     def GetPerson(
-        self, req: person_service.GetPersonRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | person_service.GetPersonResponse]:
+        self,
+        req: Union[person_service.GetPersonRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.GetPersonResponse]]:
         """
         获取person信息
 
@@ -69,8 +71,10 @@ class PersonService:
         return async_parse(res, dict_return)
 
     def AddPerson(
-        self, req: person_service.AddPersonRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | person_service.AddPersonResponse]:
+        self,
+        req: Union[person_service.AddPersonRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.AddPersonResponse]]:
         """
         新增person
 
@@ -88,8 +92,10 @@ class PersonService:
         return async_parse(res, dict_return)
 
     def SetSchedule(
-        self, req: person_service.SetScheduleRequest | dict, dict_return: bool = True
-    ) -> Coroutine[Any, Any, dict[str, Any] | person_service.SetScheduleResponse]:
+        self,
+        req: Union[person_service.SetScheduleRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.SetScheduleResponse]]:
         """
         修改person的schedule
 
@@ -109,10 +115,10 @@ class PersonService:
 
     def GetPersonsByLongLatArea(
         self,
-        req: person_service.GetPersonsByLongLatAreaRequest | dict,
+        req: Union[person_service.GetPersonsByLongLatAreaRequest, dict],
         dict_return: bool = True,
     ) -> Coroutine[
-        Any, Any, dict[str, Any] | person_service.GetPersonsByLongLatAreaResponse
+        Any, Any, Union[Dict[str, Any], person_service.GetPersonsByLongLatAreaResponse]
     ]:
         """
         获取特定区域内的person
