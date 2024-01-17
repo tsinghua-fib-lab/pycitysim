@@ -7,13 +7,17 @@ m = Map(
     cache_dir="./cache",
 )
 
-# # 经纬度和地图平面坐标系转换
-# center = m.lnglat2xy(116.322, 39.983)
-# print(center)
+# 经纬度和地图平面坐标系转换
+center = m.lnglat2xy(116.322, 39.983)
+print(center)
 
 # # 查询圆半径内POI
 # pois = m.query_pois(center, 1000, "10", 10)
 # print(pois)
+
+# 查询圆半径内Lane，返回[(lane, s, distance), ...]
+lanes = m.query_lane(center, 100, 1)
+print(lanes)
 
 # # 列出所有AOI ID
 # print(list(m.aois.keys())[:10])
