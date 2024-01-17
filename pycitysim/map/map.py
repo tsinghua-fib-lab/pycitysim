@@ -138,8 +138,14 @@ class Map:
         """
         采用PROJ.4投影字符串创建的转换器，用以支持xy坐标到WGS84坐标系的转换
         """
-
-        self._poi_tree, self._poi_list = self._build_geo_index()
+        (
+            self._poi_tree,
+            self._poi_list,
+            self._driving_lane_tree,
+            self._driving_lane_list,
+            self._walking_lane_tree,
+            self._walking_lane_list,
+        ) = self._build_geo_index()
 
     def _download_map(self, uri: str, db: str, coll: str) -> Dict[str, Any]:
         client = MongoClient(uri)
@@ -258,8 +264,27 @@ class Map:
         #     }
         # }
         poi_list = list(self.pois.values())
-        tree = shapely.STRtree([poi["shapely_xy"] for poi in poi_list])
-        return tree, poi_list
+        poi_tree = shapely.STRtree([poi["shapely_xy"] for poi in poi_list])
+        driving_lane_list = [
+            lane for lane in self.lanes.values() if lane["type"] == 1  # driving
+        ]
+        driving_lane_tree = shapely.STRtree(
+            [lane["shapely_xy"] for lane in driving_lane_list]
+        )
+        walking_lane_list = [
+            lane for lane in self.lanes.values() if lane["type"] == 2  # walking
+        ]
+        walking_lane_tree = shapely.STRtree(
+            [lane["shapely_xy"] for lane in walking_lane_list]
+        )
+        return (
+            poi_tree,
+            poi_list,
+            driving_lane_tree,
+            driving_lane_list,
+            walking_lane_tree,
+            walking_lane_list,
+        )
 
     def _get_lane_s(self, position: geo_pb2.Position, lane_id: int) -> float:
         """
@@ -705,3 +730,44 @@ class Map:
         if limit is not None:
             pois = pois[:limit]
         return pois
+
+    def query_lane(
+        self,
+        xy: Union[Tuple[float, float], Point],
+        radius: float,
+        lane_type: int = 1,
+    ):
+        """
+        查询xy点指定半径内的lane和s坐标
+
+        Args:
+        - xy (x, y): 中心点（xy坐标系）
+        - radius (float): 半径（单位：m），超出半径则返回空列表
+        - lane_type (int): 车道类型（1:行车，默认|2:步行）
+
+        Returns:
+        - List[Tuple[Any, float, float]]: lane列表，每个元素为（lane, s, 距离）
+        """
+
+        if not isinstance(xy, Point):
+            xy = Point(xy)
+        if lane_type == 1:
+            indices = self._driving_lane_tree.query(xy.buffer(radius))
+            lanes = [self._driving_lane_list[index] for index in indices]
+        elif lane_type == 2:
+            indices = self._walking_lane_tree.query(xy.buffer(radius))
+            lanes = [self._walking_lane_list[index] for index in indices]
+        else:
+            raise ValueError(f"lane_type {lane_type} not supported")
+        result = []  # (lane, s, distance)
+        # 计算距离和s坐标
+        for lane in lanes:
+            distance = xy.distance(lane["shapely_xy"])
+            if distance > radius:
+                continue
+            s = lane["shapely_xy"].project(xy)
+            result.append((lane, s, distance))
+        # 按距离排序
+        result = sorted(result, key=lambda x: x[2])
+
+        return result
