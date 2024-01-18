@@ -44,6 +44,14 @@ apk add g++
 
 """
 
-from . import map, routing, sidecar, sim, urbankg, utils, streetview
+from . import map, routing, sidecar, sim, urbankg, utils, apphub
 
-__all__ = ["map", "routing", "sidecar", "sim", "urbankg", "utils", "streetview"]
+__all__ = [
+    "map",
+    "routing",
+    "sidecar",
+    "sim",
+    "urbankg",
+    "utils",
+    "apphub",
+]
