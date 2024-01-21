@@ -11,7 +11,7 @@ async def main():
     )
 
     s = OnlyClientSidecar("py1", "localhost:53001")
-    traffic_client = CityClient(s)
+    traffic_client = CityClient.from_sidecar(s)
 
     # 进行前期准备工作
     s.init()

@@ -19,12 +19,11 @@ class CityClient:
 
     NAME = "city"
 
-    def __init__(self, sidecar: OnlyClientSidecar, name: str = NAME):
+    def __init__(self, url: str):
         """
         Args:
-        - server_address (str): 模拟器server的地址
+        - url (str): 模拟器server的地址
         """
-        url = sidecar.wait_url(name)
         aio_channel = grpc.aio.insecure_channel(url)
         self._clock_service = ClockService(aio_channel)
         self._lane_service = LaneService(aio_channel)
@@ -35,6 +34,11 @@ class CityClient:
         self._economy_person_service = EconomyPersonService(aio_channel)
         self._economy_org_service = EconomyOrgService(aio_channel)
         self._event_service = EventService(aio_channel)
+
+    @staticmethod
+    def from_sidecar(sidecar: OnlyClientSidecar, name: str = NAME):
+        """从sidecar中创建CityClient"""
+        return CityClient(sidecar.wait_url(name))
 
     @property
     def clock_service(self):
