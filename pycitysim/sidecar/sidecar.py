@@ -6,6 +6,8 @@ import grpc
 from pycityproto.city.sync.v1 import sync_service_pb2 as sync_service
 from pycityproto.city.sync.v1 import sync_service_pb2_grpc as sync_grpc
 
+from ..utils.grpc import create_aio_channel
+
 __all__ = ["OnlyClientSidecar"]
 
 
@@ -14,19 +16,16 @@ class OnlyClientSidecar:
     Sidecar框架服务（仅支持作为客户端，不支持对外提供gRPC服务）
     """
 
-    def __init__(
-        self,
-        name: str,
-        syncer_address: str,
-    ):
+    def __init__(self, name: str, syncer_address: str, secure: bool = False):
         """
         Args:
         - name (str): 本服务在etcd上的注册名
         - server_address (str): syncer地址
         - listen_address (str): sidecar监听地址
+        - secure (bool, optional): 是否使用安全连接. Defaults to False.
         """
         self._name = name
-        channel = grpc.insecure_channel(syncer_address)
+        channel = create_aio_channel(syncer_address, secure)
         self._sync_stub = sync_grpc.SyncServiceStub(channel)
 
     def wait_url(self, name: str) -> str:

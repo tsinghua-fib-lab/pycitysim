@@ -6,6 +6,7 @@ from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
 from pycityproto.city.routing.v2 import routing_service_pb2_grpc as routing_grpc
 
 from ..utils.protobuf import async_parse
+from ..utils.grpc import create_aio_channel
 
 __all__ = [
     "RoutingClient",
@@ -15,13 +16,14 @@ __all__ = [
 class RoutingClient:
     """Routing服务的client端"""
 
-    def __init__(self, server_address: str):
+    def __init__(self, server_address: str, secure: bool = False):
         """RoutingClient的构造函数
 
         Args:
         - server_address (str): routing服务器地址
+        - secure (bool, optional): 是否使用安全连接. Defaults to False.
         """
-        aio_channel = grpc.aio.insecure_channel(server_address)
+        aio_channel = create_aio_channel(server_address, secure)
         self._aio_stub = routing_grpc.RoutingServiceStub(aio_channel)
 
     def GetRoute(

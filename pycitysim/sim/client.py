@@ -11,6 +11,8 @@ from .social_service import SocialService
 from .economy_services import EconomyPersonService, EconomyOrgService
 from .event_service import EventService
 
+from ..utils.grpc import create_aio_channel
+
 __all__ = ["CityClient"]
 
 
@@ -19,12 +21,17 @@ class CityClient:
 
     NAME = "city"
 
-    def __init__(self, url: str):
+    def __init__(
+        self,
+        url: str,
+        secure: bool = False,
+    ):
         """
         Args:
         - url (str): 模拟器server的地址
+        - secure (bool, optional): 是否使用安全连接. Defaults to False.
         """
-        aio_channel = grpc.aio.insecure_channel(url)
+        aio_channel = create_aio_channel(url, secure)
         self._clock_service = ClockService(aio_channel)
         self._lane_service = LaneService(aio_channel)
         self._person_service = PersonService(aio_channel)
