@@ -11,7 +11,10 @@ __all__ = ["ClockService"]
 
 
 class ClockService:
-    """城市模拟时间服务"""
+    """
+    城市模拟时间服务
+    City simulation clock service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = clock_grpc.ClockServiceStub(aio_channel)
@@ -23,7 +26,8 @@ class ClockService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], clock_service.NowResponse]]:
         """
         按照topic查询事件
-
+        Query events by topic
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.clock.v1.NowRequest
 

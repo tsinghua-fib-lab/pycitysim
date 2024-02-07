@@ -4,14 +4,16 @@ __all__ = ["create_aio_channel"]
 
 
 def create_aio_channel(server_address: str, secure: bool = False) -> grpc.aio.Channel:
-    """创建一个grpc的异步channel
+    """
+    创建一个grpc的异步channel
+    Create a grpc asynchronous channel
 
     Args:
-    - server_address (str): 服务器地址
-    - secure (bool, optional): 是否使用安全连接. Defaults to False.
+    - server_address (str): 服务器地址。server address.
+    - secure (bool, optional): 是否使用安全连接. Defaults to False. Whether to use a secure connection. Defaults to False.
 
     Returns:
-    - grpc.aio.Channel: grpc的异步channel
+    - grpc.aio.Channel: grpc的异步channel。grpc asynchronous channel.
     """
     if server_address.startswith("http://"):
         server_address = server_address.split("//")[1]

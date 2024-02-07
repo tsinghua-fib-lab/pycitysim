@@ -11,7 +11,10 @@ __all__ = ["EventService"]
 
 
 class EventService:
-    """城市模拟事件服务"""
+    """
+    城市模拟事件服务
+    City simulation event service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = event_grpc.EventServiceStub(aio_channel)
@@ -25,6 +28,7 @@ class EventService:
     ]:
         """
         按照topic查询事件
+        Query event by topic
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.event.v2.GetEventsByTopicRequest
@@ -49,7 +53,8 @@ class EventService:
     ]:
         """
         确认事件已被处理
-
+        Confirm that the event has been processed
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.event.v2.ResolveEventsRequest
 

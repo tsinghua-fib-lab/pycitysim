@@ -17,7 +17,10 @@ __all__ = ["CityClient"]
 
 
 class CityClient:
-    """模拟器接口"""
+    """
+    模拟器接口
+    Simulator interface
+    """
 
     NAME = "city"
 
@@ -28,8 +31,8 @@ class CityClient:
     ):
         """
         Args:
-        - url (str): 模拟器server的地址
-        - secure (bool, optional): 是否使用安全连接. Defaults to False.
+        - url (str): 模拟器server的地址。The address of the emulator server.
+        - secure (bool, optional): 是否使用安全连接. Defaults to False. Whether to use a secure connection. Defaults to False.
         """
         aio_channel = create_aio_channel(url, secure)
         self._clock_service = ClockService(aio_channel)
@@ -44,23 +47,33 @@ class CityClient:
 
     @staticmethod
     def from_sidecar(sidecar: OnlyClientSidecar, name: str = NAME):
-        """从sidecar中创建CityClient"""
+        """
+        从sidecar中创建CityClient
+        Create CityClient from sidecar
+        """
         return CityClient(sidecar.wait_url(name))
 
     @property
     def clock_service(self):
-        """模拟器时间服务子模块"""
+        """
+        模拟器时间服务子模块
+        Simulator time service submodule
+        """
         return self._clock_service
 
     @property
     def lane_service(self):
-        """模拟器lane服务子模块"""
+        """
+        模拟器lane服务子模块
+        Simulator lane service submodule
+        """
         return self._lane_service
 
     @property
     def agent_service(self):
         """
         模拟器智能体服务子模块（已弃用，请使用.person_service）
+        Simulator agent service submodule (deprecated, please use .person_service)
         """
         warnings.warn(
             "agent_service is deprecated, use person_service instead",
@@ -70,35 +83,56 @@ class CityClient:
 
     @property
     def person_service(self):
-        """模拟器智能体服务子模块"""
+        """
+        模拟器智能体服务子模块
+        Simulator agent service submodule
+        """
         return self._person_service
 
     @property
     def aoi_service(self):
-        """模拟器AOI服务子模块"""
+        """
+        模拟器AOI服务子模块
+        Simulator AOI service submodule
+        """
         return self._aoi_service
 
     @property
     def road_service(self):
-        """模拟器road服务子模块"""
+        """
+        模拟器road服务子模块
+        Simulator road service submodule
+        """
         return self._road_service
 
     @property
     def social_service(self):
-        """模拟器social服务子模块"""
+        """
+        模拟器social服务子模块
+        Simulator social service submodule
+        """
         return self._social_service
 
     @property
     def economy_person_service(self):
-        """模拟器经济服务（个人）子模块"""
+        """
+        模拟器经济服务（个人）子模块
+        Simulator economic service (personal) submodule
+        """
         return self._economy_person_service
 
     @property
     def economy_org_service(self):
-        """模拟器经济服务（组织）子模块"""
+        """
+        模拟器经济服务（组织）子模块
+        Simulator economic service (organizational) submodule
+        """
         return self._economy_org_service
 
     @property
     def event_service(self):
-        """模拟器事件服务子模块"""
+        """
+        模拟器事件服务子模块
+        Simulator event service submodule
+        """
         return self._event_service

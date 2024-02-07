@@ -11,7 +11,10 @@ __all__ = ["LaneService"]
 
 
 class LaneService:
-    """交通模拟lane服务"""
+    """
+    交通模拟lane服务
+    Traffic simulation lane service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = lane_grpc.LaneServiceStub(aio_channel)
@@ -21,6 +24,7 @@ class LaneService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], lane_service.GetLaneResponse]]:
         """
         获取Lane的信息
+        Get Lane's information
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneRequest
@@ -40,6 +44,7 @@ class LaneService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], lane_service.SetLaneMaxVResponse]]:
         """
         设置Lane的最大速度（限速）
+        Set the maximum speed of Lane (speed limit)
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.SetLaneMaxVRequest
@@ -63,6 +68,7 @@ class LaneService:
     ]:
         """
         获取特定区域内的Lane的信息
+        Get lane information in a specific region
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetLaneByLongLatBBoxRequest

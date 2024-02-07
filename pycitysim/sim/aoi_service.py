@@ -11,7 +11,10 @@ __all__ = ["AoiService"]
 
 
 class AoiService:
-    """aoi服务"""
+    """
+    aoi服务
+    AOI service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = aoi_grpc.AoiServiceStub(aio_channel)
@@ -21,7 +24,8 @@ class AoiService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], aoi_service.GetAoiResponse]]:
         """
         获取AOI信息
-
+        get AOI information
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetAoiRequest
 

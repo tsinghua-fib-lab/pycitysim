@@ -11,7 +11,10 @@ __all__ = ["RoadService"]
 
 
 class RoadService:
-    """交通模拟road服务"""
+    """
+    交通模拟road服务
+    Traffic simulation road service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = road_grpc.RoadServiceStub(aio_channel)
@@ -21,7 +24,8 @@ class RoadService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], road_service.GetRoadResponse]]:
         """
         查询道路信息
-
+        Query road information
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.GetRoadRequest
 

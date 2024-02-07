@@ -13,7 +13,10 @@ __all__ = ["EconomyPersonService", "EconomyOrgService"]
 
 
 class EconomyPersonService:
-    """城市模拟经济服务（个人）"""
+    """
+    城市模拟经济服务（个人）
+    City simulation economic service (personal)
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = person_grpc.PersonServiceStub(aio_channel)
@@ -25,7 +28,8 @@ class EconomyPersonService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.GetPersonResponse]]:
         """
         批量查询人的经济情况（资金、雇佣关系）
-
+        Query person’s economic situation (funds, employment relationship) in batches
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.GetPersonRequest
 
@@ -48,6 +52,7 @@ class EconomyPersonService:
     ]:
         """
         批量修改人的资金
+        Modify person’s money in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.UpdatePersonMoneyRequest
@@ -65,7 +70,10 @@ class EconomyPersonService:
 
 
 class EconomyOrgService:
-    """城市模拟经济服务（组织）"""
+    """
+    城市模拟经济服务（组织）
+    City simulation economic service (organizational)
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = org_grpc.OrgServiceStub(aio_channel)
@@ -75,6 +83,7 @@ class EconomyOrgService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.GetOrgResponse]]:
         """
         批量查询组织的经济情况（员工、岗位、资金、货物）
+        Query the economic status of the organization (employees, positions, funds, goods) in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.GetOrgRequest
@@ -94,6 +103,7 @@ class EconomyOrgService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgMoneyResponse]]:
         """
         批量修改组织的资金
+        Modify organization’s money in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.UpdateOrgMoneyRequest
@@ -116,6 +126,7 @@ class EconomyOrgService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgGoodsResponse]]:
         """
         批量修改组织的货物
+        Modify organization’s goods in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.UpdateOrgGoodsRequest
@@ -140,6 +151,7 @@ class EconomyOrgService:
     ]:
         """
         批量修改组织的员工
+        Modify organization’s emplpyees in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.UpdateOrgEmployeeRequest
@@ -162,6 +174,7 @@ class EconomyOrgService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], org_service.UpdateOrgJobResponse]]:
         """
         批量修改组织的岗位
+        Modify organization’s jobs in batches
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.economy.v1.UpdateOrgJobRequest

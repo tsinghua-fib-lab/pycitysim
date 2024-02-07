@@ -9,6 +9,7 @@ __all__ = ["UrbanKG"]
 class UrbanKG:
     """
     城市知识图谱
+    Urban knowledge graph
     """
 
     CLASSES = ["Region", "POI", "Cate3", "Brand", "Ba", "Cate2", "Cate1"]
@@ -46,9 +47,9 @@ class UrbanKG:
         """
         Args:
         - mongo_uri: MongoDB URI
-        - mongo_db: MongoDB数据库名
-        - mongo_entity_coll: MongoDB实体集合名
-        - mongo_relation_coll: MongoDB关系集合名
+        - mongo_db: MongoDB数据库名。MongoDB database name.
+        - mongo_entity_coll: MongoDB实体集合名。MongoDB entity collection name.
+        - mongo_relation_coll: MongoDB关系集合名。MongoDB relation collection name.
         - cache_size: LRU缓存大小
         """
         client = MongoClient(mongo_uri)
@@ -64,12 +65,13 @@ class UrbanKG:
     def get_entity(self, id: str) -> Optional[dict]:
         """
         查询实体
+        query entity
 
         Args:
-        - id: 实体ID
+        - id: 实体ID。entity ID.
 
         Returns:
-        - Optional[dict]: 实体，为None表示不存在
+        - Optional[dict]: 实体，为None表示不存在。Entity, None means it does not exist.
         """
         if id in self._entity_cache:
             return self._entity_cache[id]
@@ -82,10 +84,11 @@ class UrbanKG:
     def query_object(self, subject_id: str, relation: str) -> List[str]:
         """
         根据主体（subject）和关系（relation）查询客体（object）
+        Query objects based on subject and relationship
 
         Args:
-        - subject_id: 主体ID
-        - relation: 关系
+        - subject_id: 主体ID。subject ID.
+        - relation: 关系。relation.
 
         Returns
         - List[str]: 客体ID列表
@@ -124,13 +127,14 @@ class UrbanKG:
     def query_subject(self, object_id: str, relation: str) -> List[str]:
         """
         根据客体（object）和关系（relation）查询主体（subject）
+        Query the subject based on the object and relationship
 
         Args:
-        - object_id: 客体ID
-        - relation: 关系
+        - object_id: 客体ID。object ID.
+        - relation: 关系。relation.
 
         Returns
-        - List[str]: 主体ID列表
+        - List[str]: 主体ID列表。List of subject IDs.
         """
         key = ("", relation, object_id)
         if key in self._relation_cache:
@@ -166,13 +170,14 @@ class UrbanKG:
     def explore(self, subject_id: str, relations: List[str]) -> List[Tuple[str, dict]]:
         """
         根据主体（subject）和要探索的关系列表（relations）查询所有有关的客体（object）
+        Query all related objects based on the subject and the list of relationships to be explored.
 
         Args:
-        - subject_id: 主体ID
-        - relations: 要探索的关系列表
+        - subject_id: 主体ID。subject ID.
+        - relations: 要探索的关系列表。The list of relationships to be explored.
 
         Returns:
-        - List[Tuple[str, dict]]: 结果列表，Tuple第一项为关系，第二项为客体
+        - List[Tuple[str, dict]]: 结果列表，Tuple第一项为关系，第二项为客体。Result list, the first item of Tuple is the relationship, the second item is the object.
         """
         key = (subject_id, tuple(relations))
         if key in self._relation_cache:
