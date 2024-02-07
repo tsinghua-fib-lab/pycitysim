@@ -10,6 +10,7 @@ T = TypeVar("T", bound=Message)
 def parse(res: T, dict_return: bool) -> Union[Dict[str, Any], T]:
     """
     将Protobuf返回值转换为dict或者原始值
+    Convert Protobuf return value to dict or original value
     """
     if dict_return:
         return MessageToDict(
@@ -25,6 +26,7 @@ def parse(res: T, dict_return: bool) -> Union[Dict[str, Any], T]:
 async def async_parse(res: Awaitable[T], dict_return: bool) -> Union[Dict[str, Any], T]:
     """
     将Protobuf await返回值转换为dict或者原始值
+    Convert Protobuf await return value to dict or original value
     """
     if dict_return:
         return MessageToDict(

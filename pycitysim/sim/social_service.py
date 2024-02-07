@@ -11,7 +11,10 @@ __all__ = ["SocialService"]
 
 
 class SocialService:
-    """城市模拟社交服务"""
+    """
+    城市模拟社交服务
+    City simulation social service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = social_grpc.SocialServiceStub(aio_channel)
@@ -21,6 +24,7 @@ class SocialService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], social_service.SendResponse]]:
         """
         发送消息
+        Send message
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.social.v1.SendRequest
@@ -38,7 +42,8 @@ class SocialService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], social_service.ReceiveResponse]]:
         """
         接收消息
-
+        Receive message
+        
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.social.v1.ReceiveRequest
 

@@ -13,7 +13,10 @@ __all__ = ["PersonService"]
 
 
 class PersonService:
-    """交通模拟lane服务"""
+    """
+    交通模拟person服务
+    Traffic simulation person service
+    """
 
     def __init__(self, aio_channel: grpc.aio.Channel):
         self._aio_stub = person_grpc.PersonServiceStub(aio_channel)
@@ -28,10 +31,12 @@ class PersonService:
 
     @staticmethod
     def default_person() -> person_pb2.Person:
-        """获取person基本模板
+        """
+        获取person基本模板
+        Get person basic template
 
         需要补充的字段有person.home,person.schedules,person.labels
-
+        The fields that need to be supplemented are person.home, person.schedules, person.labels
         """
         person = person_pb2.Person(
             attribute=person_pb2.PersonAttribute(
@@ -56,6 +61,7 @@ class PersonService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.GetPersonResponse]]:
         """
         获取person信息
+        Get person information
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonRequest
@@ -77,6 +83,7 @@ class PersonService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.AddPersonResponse]]:
         """
         新增person
+        Add a new person
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.AddPersonRequest
@@ -98,6 +105,7 @@ class PersonService:
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.SetScheduleResponse]]:
         """
         修改person的schedule
+        set person's schedule
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.SetScheduleRequest
@@ -122,6 +130,7 @@ class PersonService:
     ]:
         """
         获取特定区域内的person
+        Get persons in a specific region
 
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonByLongLatBBoxRequest

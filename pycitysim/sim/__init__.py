@@ -1,5 +1,6 @@
 """
 模拟器gRPC接入客户端
+Emulator gRPC access client
 """
 
 from .person_service import PersonService
