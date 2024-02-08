@@ -1,0 +1,43 @@
+{
+    "python.formatting.provider": "black",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "cSpell.words": [
+        "Elec",
+        "linemerge",
+        "lnglat",
+        "lngs",
+        "Protobuf",
+        "protos",
+        "pycityproto",
+        "pycitysim",
+        "pymongo",
+        "pyproj",
+        "tsingroc",
+        "wolong"
+    ],
+    "editor.tabSize": 4,
+    "files.autoSave": "onFocusChange",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 88,
+    "editor.formatOnSave": true,
+    "todohighlight.keywords": [
+        {
+            "text": "TODO",
+            "color": "#fff",
+            "backgroundColor": "#fdbc3eaa",
+            "overviewRulerColor": "#fdbc3e",
+            "isWholeLine": true,
+        },
+        {
+            "text": "ATTENTION",
+            "color": "#fff",
+            "backgroundColor": "#f06292aa",
+            "overviewRulerColor": "#f06292",
+            "isWholeLine": true,
+        }
+    ],
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.showUnused": true
+}

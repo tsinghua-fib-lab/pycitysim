@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=41", "wheel", "setuptools-git-versioning<2"]
+build-backend = "setuptools.build_meta"
+
+# https://setuptools-git-versioning.readthedocs.io/en/stable/install.html
+[tool.setuptools-git-versioning]
+enabled = true
+
+[project]
+name = "pycitysim"
+authors = [
+    {name = "Jun Zhang", email = "zhangjun990222@gmail.com"},
+]
+description = "City Simulator and OpenCity Databases Python SDK"
+keywords = ["city", "simulation", "database", "sdk"]
+readme = "README.md"
+license = {file = "LICENSE"}
+dynamic = ["version"]
+requires-python = ">=3.8"
+dependencies = [
+    'importlib-metadata; python_version<"3.8"',
+    "geojson >= 3.1.0",
+    "grpcio >= 1.42.0, < 2.0.0",
+    "lru-dict >= 1.3.0",
+    "numpy >= 1.24.0",
+    "Pillow >= 10.0.0",
+    "pycityproto >= 1.7.0, < 2.0.0",
+    "pymongo >= 3.12.1",
+    "pyproj >= 3.0.0",
+    "shapely >= 2.0.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/tsinghua-fib-lab/pycitysim"
+Repository = "https://github.com/tsinghua-fib-lab/pycitysim.git"
+Issues = "https://github.com/tsinghua-fib-lab/pycitysim/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pycitysim*"]
