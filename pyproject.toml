@@ -36,6 +36,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/tsinghua-fib-lab/pycitysim"
+Documentation = "https://pycitysim.sim.fiblab.net/pycitysim"
 Repository = "https://github.com/tsinghua-fib-lab/pycitysim.git"
 Issues = "https://github.com/tsinghua-fib-lab/pycitysim/issues"
 

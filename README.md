@@ -1,6 +1,6 @@
 # pycitysim
 
-城市模拟器Python库
+City Simulator and OpenCity databases Python SDK
 
 ## 安装 Installation
 
