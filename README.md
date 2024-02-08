@@ -39,4 +39,4 @@ apk add g++
 
 ## 示例代码
 
-访问 [examples](https://github.com/tsinghua-fib-lab/pycitysim/-/tree/main/examples?ref_type=heads) 查看示例代码。
+访问 [examples](https://github.com/tsinghua-fib-lab/pycitysim/tree/main/examples) 查看示例代码。
