@@ -3,7 +3,7 @@ import os
 import pickle
 import warnings
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 import pyproj
@@ -480,7 +480,7 @@ class Map:
     def export_aoi_center_as_geojson(
         self,
         id: int,
-        properties: Union[Dict[str, Any], str] = "auto",
+        properties: Union[Dict[str, Any], Literal["auto"]] = "auto",
     ) -> dict:
         """
         导出aoi中心点为geojson
@@ -488,7 +488,7 @@ class Map:
 
         Args:
         - id (int): aoi id
-        - properties (Dict[str, Any] | str, optional): geojson的properties, 设置为"auto"时按照【如何与可视化团队交互】需要自动设置properties. Defaults to {}. Geojson's properties, when set to "auto", the properties need to be automatically set according to [How to interact with the visualization team]. Defaults to {}.
+        - properties (Dict[str, Any] | str, optional): geojson的properties, 设置为"auto"时包含aoi类别与所含的poi列表. Defaults to {}. Geojson's properties, when set to "auto", the properties include aoi category and the list of contained poi. Defaults to {}.
 
         Returns:
         - dict: geojson格式的dict。dict in geojson format.
@@ -506,8 +506,33 @@ class Map:
         feature = Feature(id=id, geometry=geometry, properties=properties)
         return dict(feature)
 
+    def export_aoi_as_geojson(
+        self, id: int, properties: Union[Dict[str, Any], Literal["auto"]] = "auto"
+    ) -> dict:
+        """
+        导出aoi为geojson
+        Export aoi as geojson
+
+        Args:
+        - id (int): aoi id
+        - properties (Dict[str, Any] | str, optional): geojson的properties, 设置为"auto"时包含aoi类别与所含的poi列表. Defaults to {}. Geojson's properties, when set to "auto", the properties include aoi category and the list of contained poi. Defaults to {}.
+
+        Returns:
+        - dict: geojson格式的dict。dict in geojson format.
+        """
+        aoi = self.get_aoi(id)
+        assert aoi is not None, f"aoi {id} not found"
+        geometry = aoi["shapely_lnglat"]
+        if properties == "auto":
+            properties = {
+                "aoi_type": str(aoi.get("land_use", 0)),
+                "poi_ids": [str(pid) for pid in aoi.get("poi_ids", [])],
+            }
+        feature = Feature(id=id, geometry=geometry, properties=properties)
+        return dict(feature)
+
     def export_poi_as_geojson(
-        self, id: int, properties: Union[Dict[str, Any], str] = "auto"
+        self, id: int, properties: Union[Dict[str, Any], Literal["auto"]] = "auto"
     ) -> dict:
         """
         导出poi为geojson
@@ -515,7 +540,7 @@ class Map:
 
         Args:
         - id (int): poi id
-        - properties (Dict[str, Any] | str, optional): geojson的properties, 设置为"auto"时按照【如何与可视化团队交互】需要自动设置properties. Defaults to "auto". Geojson's properties, when set to "auto", the properties need to be automatically set according to [How to interact with the visualization team]. Defaults to "auto".
+        - properties (Dict[str, Any] | str, optional): geojson的properties, 设置为"auto"时包含poi类别、名称. Defaults to "auto". Geojson's properties, when set to "auto", the properties include poi category and name. Defaults to "auto".
 
         Returns:
         - dict: geojson格式的dict. dict in geojson format.
@@ -534,14 +559,16 @@ class Map:
         feature = Feature(id=id, geometry=geometry, properties=properties)
         return dict(feature)
 
-    def export_lane_as_geojson(self, id: int, properties: Dict[str, Any] = {}) -> dict:
+    def export_lane_as_geojson(
+        self, id: int, properties: Union[Dict[str, Any], Literal["auto"]] = "auto"
+    ) -> dict:
         """
         导出lane为geojson
         geojson的properties. Defaults to {}.
 
         Args:
         - id (int): lane id
-        - properties (Dict[str, Any], optional): geojson的properties. Defaults to {}. geojson properties. Defaults to {}.
+        - properties (Dict[str, Any], optional): geojson的properties. Defaults to "auto"（含lane的类别、转向类别、父对象ID、最大车速）. geojson properties. Defaults to {}. (including lane type, turn type, parent object ID, maximum vehicle speed).
 
         Returns:
         - dict: geojson格式的dict。dict in geojson format.
@@ -549,6 +576,14 @@ class Map:
         lane = self.get_lane(id)
         assert lane is not None, f"lane {id} not found"
         geometry = lane["shapely_lnglat"]
+        if properties == "auto":
+            properties = {
+                "id": str(id),
+                "lane_type": str(lane["type"]),
+                "lane_turn": str(lane["turn"]),
+                "parent_id": str(lane["parent_id"]),
+                "max_speed": lane["max_speed"],
+            }
         feature = Feature(id=id, geometry=geometry, properties=properties)
         return dict(feature)
 
