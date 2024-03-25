@@ -10,6 +10,7 @@ from .road_service import RoadService
 from .social_service import SocialService
 from .economy_services import EconomyPersonService, EconomyOrgService
 from .event_service import EventService
+from .light_service import LightService
 
 from ..utils.grpc import create_aio_channel
 
@@ -44,6 +45,7 @@ class CityClient:
         self._economy_person_service = EconomyPersonService(aio_channel)
         self._economy_org_service = EconomyOrgService(aio_channel)
         self._event_service = EventService(aio_channel)
+        self._light_service = LightService(aio_channel)
 
     @staticmethod
     def from_sidecar(sidecar: OnlyClientSidecar, name: str = NAME):
@@ -136,3 +138,11 @@ class CityClient:
         Simulator event service submodule
         """
         return self._event_service
+
+    @property
+    def light_service(self):
+        """
+        模拟器红绿灯服务子模块
+        Simulator traffic light service submodule
+        """
+        return self._light_service
