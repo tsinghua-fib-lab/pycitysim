@@ -6,7 +6,7 @@ import grpc
 from pycityproto.city.sync.v1 import sync_service_pb2 as sync_service
 from pycityproto.city.sync.v1 import sync_service_pb2_grpc as sync_grpc
 
-from ..utils.grpc import create_aio_channel
+from ..utils.grpc import create_channel
 
 __all__ = ["OnlyClientSidecar"]
 
@@ -26,7 +26,7 @@ class OnlyClientSidecar:
         - secure (bool, optional): 是否使用安全连接. Defaults to False. Whether to use a secure connection. Defaults to False.
         """
         self._name = name
-        channel = create_aio_channel(syncer_address, secure)
+        channel = create_channel(syncer_address, secure)
         self._sync_stub = sync_grpc.SyncServiceStub(channel)
 
     def wait_url(self, name: str) -> str:
@@ -91,7 +91,7 @@ class OnlyClientSidecar:
         """
         同步器关闭
         Synchronizer close
-        
+
         Returns:
         - close (bool): 是否退出模拟。Whether the simulation exited.
         """
