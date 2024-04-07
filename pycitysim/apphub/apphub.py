@@ -127,6 +127,7 @@ class AppHubClient:
             json=body,
             auth=self._auth,
             proxies=self.proxies,
+            timeout=5000
         )
         if res.status_code != 200:
             raise Exception(f"[{res.status_code}] AppHub bind failed: " + res.text)
@@ -170,10 +171,20 @@ class AppHubClient:
         - Exception: 绑定失败。Binding failed.
         """
         return self._bind(org_id, "org", name, avatar)
+    
+    def bind_func(self, name:str, avatar:Image):
+        """
+        插入非模拟器相关的智能体——func类型智能体
+
+        Args:
+        - name (str): 该智能体的名字
+        - avatar (Image): 该智能体的头像
+        """
+        return self._bind(-1, "func", name, avatar)
 
     def release_agent(self, agent_id: int) -> bool:
         """
-        释放agent(person/org)，释放后agent将不再被访问并允许其他app绑定
+        释放agent(person/org), 释放后agent将不再被访问并允许其他app绑定
         Release the agent (person/org). After the release, the agent will no longer be accessed and allows other apps to bind.
 
         Args:
@@ -186,6 +197,7 @@ class AppHubClient:
             self.app_hub_url + "/agents/" + str(agent_id),
             auth=self._auth,
             proxies=self.proxies,
+            timeout=5000
         )
         return res.status_code == 200
 
@@ -227,6 +239,7 @@ class AppHubClient:
             json=body,
             auth=self._auth,
             proxies=self.proxies,
+            timeout=5000
         )
         if res.status_code != 200:
             raise Exception(
@@ -250,6 +263,7 @@ class AppHubClient:
             json={"messages": [message.to_dict() for message in messages]},
             auth=self._auth,
             proxies=self.proxies,
+            timeout=5000
         )
         if res.status_code != 200:
             raise Exception(
@@ -277,6 +291,7 @@ class AppHubClient:
             self.app_hub_url + "/agents/" + str(agent_id) + "/fetch-user-messages",
             auth=self._auth,
             proxies=self.proxies,
+            timeout=5000
         )
         if res.status_code != 200:
             raise Exception(
