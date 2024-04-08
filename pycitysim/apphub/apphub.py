@@ -172,15 +172,16 @@ class AppHubClient:
         """
         return self._bind(org_id, "org", name, avatar)
     
-    def bind_func(self, name:str, avatar:Image):
+    def bind_func(self, func_id:int, name:str, avatar:Image):
         """
         插入非模拟器相关的智能体——func类型智能体
 
         Args:
+        - func_id (str): 该智能体的编号——唯一
         - name (str): 该智能体的名字
         - avatar (Image): 该智能体的头像
         """
-        return self._bind(-1, "func", name, avatar)
+        return self._bind(func_id+10000000, "func", name, avatar)
 
     def release_agent(self, agent_id: int) -> bool:
         """
