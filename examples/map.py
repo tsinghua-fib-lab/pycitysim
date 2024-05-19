@@ -17,6 +17,10 @@ pois = m.query_pois(center, 1000, "10", 10)
 pois = m.query_pois(center, 1000, "10", 10)
 print(pois)
 
+# 查询圆半径内AOI
+aois = m.query_aois(center, 1000, ["E3"], 10)
+print(aois)
+
 # 查询圆半径内Lane，返回[(lane, s, distance), ...]
 # Query lanes within the radius of the circle, return [(lane, s, distance), ...]
 lanes = m.query_lane(center, 100, 1)

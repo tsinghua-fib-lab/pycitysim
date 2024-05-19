@@ -114,7 +114,7 @@ class Map:
         - walking_positions (list[LanePosition]): 和道路网中人行道的连接点。Connection points to pedestrian lanes.
         - driving_gates (list[XYPosition]): 和道路网中行车道的连接点对应的AOI边界上的位置。Position on the AOI boundary corresponding to the connection point to driving lanes.
         - walking_gates (list[XYPosition]): 和道路网中人行道的连接点对应的AOI边界上的位置。Position on the AOI boundary corresponding to the connection point to pedestrian lanes.
-        - land_use (Optional[int]): 用地类型(5:商服用地|6:工矿仓储用地|7:住宅用地|8:公共管理与公共服务用地|10:交通运输用地|12:其他)。Landuse type (5: Commercial land | 6: Industrial, mining and warehousing land | 7: Residential land | 8: Public management and public service land | 10: Transportation land | 12: Others).
+        - urban_land_use (Optional[str]): 城市建设用地分类，参照执行标准GB 50137-2011（https://www.planning.org.cn/law/uploads/2013/1383993139.pdf） Urban Land use type, refer to the national standard GB 50137-2011.
         - poi_ids (list[int]): 包含的POI列表。Contained POI IDs.
         - shapely_xy (shapely.geometry.Polygon): AOI的形状（xy坐标系）。Shape of polygon (in xy coordinates).
         - shapely_lnglat (shapely.geometry.Polygon): AOI的形状（经纬度坐标系）。Shape of polygon (in latitude and longitude).
@@ -137,6 +137,8 @@ class Map:
         Converter created using PROJ.4 projection string to support conversion of xy coordinates to WGS84 coordinate system
         """
         (
+            self._aoi_tree,
+            self._aoi_list,
             self._poi_tree,
             self._poi_list,
             self._driving_lane_tree,
@@ -258,6 +260,8 @@ class Map:
         #     },
         #     "aoi_id": 500018954,
         # }
+        aoi_list = list(self.aois.values())
+        aoi_tree = shapely.STRtree([aoi["shapely_xy"] for aoi in aoi_list])
         poi_list = list(self.pois.values())
         poi_tree = shapely.STRtree([poi["shapely_xy"] for poi in poi_list])
         driving_lane_list = [
@@ -273,6 +277,8 @@ class Map:
             [lane["shapely_xy"] for lane in walking_lane_list]
         )
         return (
+            aoi_tree,
+            aoi_list,
             poi_tree,
             poi_list,
             driving_lane_tree,
@@ -740,7 +746,7 @@ class Map:
         - category_prefix (str): 类别前缀，如实际类别为100000，那么匹配的前缀可以为10、1000等。Category prefix, if the actual category is 100000, then the matching prefix can be 10, 1000, etc.
         - limit (int, optional): 最多返回的poi数量，按距离排序，近的优先（默认None）. The maximum number of POIs returned, sorted by distance, closest ones first (default to None).
 
-        Returns
+        Returns:
         - List[Tuple[Any, float]]: poi列表，每个元素为（poi, 距离）。poi list, each element is (poi, distance).
         """
         if not isinstance(center, Point):
@@ -759,6 +765,47 @@ class Map:
         if limit is not None:
             pois = pois[:limit]
         return pois
+
+    def query_aois(
+        self,
+        center: Union[Tuple[float, float], Point],
+        radius: float,
+        urban_land_uses: Optional[List[str]] = None,
+        limit: Optional[int] = None,
+    ) -> List[Tuple[Any, float]]:
+        """
+        查询center点指定半径内城市用地满足条件的aoi（按距离排序）。Query the AOIs whose urban land use within the specified radius of the center point meets the conditions (sorted by distance).
+
+        Args:
+        - center (x, y): 中心点（xy坐标系）。Center point (xy coordinate system).
+        - radius (float): 半径（单位：m）。Radius (unit: m).
+        - urban_land_uses (List[str], optional): 城市用地分类列表，参照执行标准GB 50137-2011（https://www.planning.org.cn/law/uploads/2013/1383993139.pdf）. Urban land use classification list, refer to the national standard GB 50137-2011.
+        - limit (int, optional): 最多返回的aoi数量，按距离排序，近的优先（默认None）. The maximum number of AOIs returned, sorted by distance, closest ones first (default to None).
+
+        Returns:
+        - List[Tuple[Any, float]]: aoi列表，每个元素为（aoi, 距离）。aoi list, each element is (aoi, distance).
+        """
+
+        if not isinstance(center, Point):
+            center = Point(center)
+        # 获取半径内的aoi
+        indices = self._aoi_tree.query(center.buffer(radius))
+        # 过滤掉不满足城市用地条件的aoi
+        aois = []
+        for index in indices:
+            aoi = self._aoi_list[index]
+            if (
+                urban_land_uses is not None
+                and aoi["urban_land_use"] not in urban_land_uses
+            ):
+                continue
+            distance = center.distance(aoi["shapely_xy"])
+            aois.append((aoi, distance))
+        # 按照距离排序
+        aois = sorted(aois, key=lambda x: x[1])
+        if limit is not None:
+            aois = aois[:limit]
+        return aois
 
     def query_lane(
         self,
