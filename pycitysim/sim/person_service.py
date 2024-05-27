@@ -145,3 +145,109 @@ class PersonService:
             self._aio_stub.GetPersonByLongLatBBox(req),
         )
         return async_parse(res, dict_return)
+
+    def GetAllVehicles(
+        self,
+        req: Union[person_service.GetAllVehiclesRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], person_service.GetAllVehiclesResponse]
+    ]:
+        """
+        获取所有车辆
+        Get all vehicles
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.GetAllVehiclesRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.GetAllVehiclesResponse
+        """
+        if type(req) != person_service.GetAllVehiclesRequest:
+            req = ParseDict(req, person_service.GetAllVehiclesRequest())
+        res = cast(
+            Awaitable[person_service.GetAllVehiclesResponse],
+            self._aio_stub.GetAllVehicles(req),
+        )
+        return async_parse(res, dict_return)
+
+    # RL接口
+
+    def SetControlledVehicleIDs(
+        self,
+        req: Union[person_service.SetControlledVehicleIDsRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], person_service.SetControlledVehicleIDsResponse]
+    ]:
+        """
+        设置由外部控制行为的vehicle
+        Set controlled vehicle ID
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.SetControlledVehicleIDsRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.SetControlledVehicleIDsResponse
+        """
+        if type(req) != person_service.SetControlledVehicleIDsRequest:
+            req = ParseDict(req, person_service.SetControlledVehicleIDsRequest())
+        res = cast(
+            Awaitable[person_service.SetControlledVehicleIDsResponse],
+            self._aio_stub.SetControlledVehicleIDs(req),
+        )
+        return async_parse(res, dict_return)
+
+    def FetchControlledVehicleEnvs(
+        self,
+        req: Union[person_service.FetchControlledVehicleEnvsRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any,
+        Any,
+        Union[Dict[str, Any], person_service.FetchControlledVehicleEnvsResponse],
+    ]:
+        """
+        获取由外部控制行为的vehicle的环境信息
+        Fetch controlled vehicle environment information
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.FetchControlledVehicleEnvsRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.FetchControlledVehicleEnvsResponse
+        """
+        if type(req) != person_service.FetchControlledVehicleEnvsRequest:
+            req = ParseDict(req, person_service.FetchControlledVehicleEnvsRequest())
+        res = cast(
+            Awaitable[person_service.FetchControlledVehicleEnvsResponse],
+            self._aio_stub.FetchControlledVehicleEnvs(req),
+        )
+        return async_parse(res, dict_return)
+
+    def SetControlledVehicleActions(
+        self,
+        req: Union[person_service.SetControlledVehicleActionsRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any,
+        Any,
+        Union[Dict[str, Any], person_service.SetControlledVehicleActionsResponse],
+    ]:
+        """
+        设置由外部控制行为的vehicle的行为
+        Set controlled vehicle actions
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.SetControlledVehicleActionsRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.SetControlledVehicleActionsResponse
+        """
+        if type(req) != person_service.SetControlledVehicleActionsRequest:
+            req = ParseDict(req, person_service.SetControlledVehicleActionsRequest())
+        res = cast(
+            Awaitable[person_service.SetControlledVehicleActionsResponse],
+            self._aio_stub.SetControlledVehicleActions(req),
+        )
+        return async_parse(res, dict_return)
