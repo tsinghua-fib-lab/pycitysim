@@ -35,7 +35,9 @@ apk add g++
 - pycitysim.apphub: OpenCity后端交互库。OpenCity backend interaction package.
 - pycitysim.map: 地图数据操作库。Map data operation package.
 - pycitysim.routing: 路径规划操作库。Routing operation package.
+- pycitysim.sateimg: 卫星影像数据下载。Satellite image data download.
 - pycitysim.sim: 模拟器gRPC接入客户端。City Simulator gRPC access client.
+- pycitysim.streetview: 街景图片操作库。Street view image operation package.
 - pycitysim.urbankg: 城市知识图谱访问模块。City knowledge graph access module.
 
 ## 示例代码
@@ -44,7 +46,7 @@ apk add g++
 
 """
 
-from . import map, routing, sidecar, sim, urbankg, utils, apphub
+from . import map, routing, sidecar, sim, urbankg, utils, apphub, streetview, sateimg
 
 __all__ = [
     "map",
@@ -54,4 +56,6 @@ __all__ = [
     "urbankg",
     "utils",
     "apphub",
+    "streetview",
+    "sateimg",
 ]
