@@ -15,7 +15,7 @@ from pycityproto.city.routing.v2 import routing_pb2
 from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
 from pymongo import MongoClient
 from shapely.geometry import LineString, Point, Polygon
-from shapely.ops import substring
+from shapely.ops import substring, unary_union
 
 __all__ = ["Map"]
 
@@ -69,6 +69,7 @@ class Map:
         The intersection collection (junction) in the map, the value of the dictionary contains the following attributes:
         - id (int): 路口编号。Junction ID.
         - lane_ids (list[int]): 属于该路口的所有车道和人行道编号。IDs of all driving and pedestrian lanes belonging to this junction.
+        - center (Dict[str, float]): 路口的大致中心点。The approximate center of the junction. example: {'x': 5983.14, 'y': 1807.73}
         """
 
         self.lanes: Dict[int, dict] = map_data["lanes"]
@@ -98,8 +99,6 @@ class Map:
         The road collection (road) in the map, the value of the dictionary contains the following attributes:
         - id (int): 道路编号。Road ID.
         - lane_ids (list[int]): 道路所包含的车道和人行道编号。Driving and pedestrian lane IDs that the road contains.
-        - external["highway"] (string): OSM中的道路等级标签。Road class labels in OSM.
-        - external["name"] (string): 道路名称（不一定有）。Road name (not necessarily available).
         """
 
         self.aois: Dict[int, dict] = map_data["aois"]
@@ -109,7 +108,6 @@ class Map:
         - id (int): AOI编号。AOI ID.
         - positions (list[XYPosition]): 多边形空间范围。Shape of polygon.
         - area (float): 面积(单位: m2)。Area.
-        - external["population"] (int): worldpop人口。population from WorldPop.
         - driving_positions (list[LanePosition]): 和道路网中行车道的连接点。Connection points to driving lanes.
         - walking_positions (list[LanePosition]): 和道路网中人行道的连接点。Connection points to pedestrian lanes.
         - driving_gates (list[XYPosition]): 和道路网中行车道的连接点对应的AOI边界上的位置。Position on the AOI boundary corresponding to the connection point to driving lanes.
@@ -217,6 +215,14 @@ class Map:
             poi["shapely_xy"] = point
             lng, lat = projector(point.x, point.y, inverse=True)
             poi["shapely_lnglat"] = Point([lng, lat])
+        # 为junction解算大致的中心点
+        for junc in juncs.values():
+            lane_shapelys = [
+                lanes[lane_id]["shapely_xy"] for lane_id in junc["lane_ids"]
+            ]
+            geos = unary_union(lane_shapelys)
+            center = geos.centroid
+            junc["center"] = {"x": center.x, "y": center.y}
 
         return {
             "header": header,

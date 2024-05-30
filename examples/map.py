@@ -7,6 +7,12 @@ m = Map(
     cache_dir="./cache",
 )
 
+# 查询junction的大致中心点
+# Query the approximate center of the junction
+junc = m.get_junction(3_0000_0000)
+assert junc is not None
+print(junc["center"])
+
 # 经纬度和地图平面坐标系转换
 # Latitude and longitude and map plane coordinate system conversion
 center = m.lnglat2xy(116.322, 39.983)
