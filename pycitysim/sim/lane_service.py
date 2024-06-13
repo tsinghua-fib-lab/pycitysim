@@ -59,6 +59,31 @@ class LaneService:
         )
         return async_parse(res, dict_return)
 
+    def SetLaneRestriction(
+        self,
+        req: Union[lane_service.SetLaneRestrictionRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], lane_service.SetLaneRestrictionResponse]
+    ]:
+        """
+        设置Lane的限制
+        Set the restriction of Lane
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.map.v2.SetLaneRestrictionRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.map.v2.SetLaneRestrictionResponse
+        """
+        if type(req) != lane_service.SetLaneRestrictionRequest:
+            req = ParseDict(req, lane_service.SetLaneRestrictionRequest())
+        res = cast(
+            Awaitable[lane_service.SetLaneRestrictionResponse],
+            self._aio_stub.SetLaneRestriction(req),
+        )
+        return async_parse(res, dict_return)
+
     def GetLaneByLongLatBBox(
         self,
         req: Union[lane_service.GetLaneByLongLatBBoxRequest, dict],
