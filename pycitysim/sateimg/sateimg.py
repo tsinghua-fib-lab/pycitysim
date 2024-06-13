@@ -1,6 +1,6 @@
 import time
 from io import BytesIO
-from typing import Dict
+from typing import Dict, List, Tuple
 import geopandas as gpd
 
 import numpy as np
@@ -9,6 +9,8 @@ from PIL import Image, ImageDraw
 from scipy.ndimage import binary_fill_holes
 
 from ._utils import get_YX_area, XY2deg
+
+__all__ = ["download_sateimgs", "download_all_tiles"]
 
 
 def _download_one_tile(args):
@@ -19,11 +21,13 @@ def _download_one_tile(args):
     Depending on the API of the tile server.
     """
     # args
-    X, Y = args
+    base_url, Z, X, Y = args
+    base_url = base_url.rstrip("/")
 
     # the url of the tile
-    base_url = "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/41468/15/"
-    url = base_url + str(Y) + "/" + str(X) + "?token=123"
+    # base_url = "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/41468/15/"
+    # url = base_url + str(Y) + "/" + str(X) + "?token=123"
+    url = f"{base_url}/{Z}/{Y}/{X}"
 
     # the filename of the tile
     filename = str(Y) + "_" + str(X)
@@ -44,18 +48,29 @@ def _download_one_tile(args):
         return filename
 
 
-def _download_all_tiles(Y_X):
+def download_all_tiles(
+    base_url: str, Z: int, Y_X: List[str]
+) -> Tuple[Dict[str, Image.Image], List[str]]:
     """
     Download all the tiles for the given x and y coordinates.
     From Esri living atlas, the token is required to download the tiles.
 
     The tiles are downloaded into the given directory.
 
-    return: failed tiles.
+    Args:
+    - base_url (str): the base url of the tile server.
+    - Z (int): the zoom level.
+    - Y_X (List[str]): the list of y_x coordinates.
+
+    Returns:
+    - cached_tiles (Dict[str, Image.Image]): the cached tiles.
+    - fail_tile_list (List[str]): the list of failed tiles.
     """
 
     # the arguments for the download_one_tile function
-    tile_args = [(int(X), int(Y)) for Y, X in [y_x.split("_") for y_x in Y_X]]
+    tile_args = [
+        (base_url, int(Z), int(X), int(Y)) for Y, X in [y_x.split("_") for y_x in Y_X]
+    ]
 
     # download the tiles
     cached_tiles = {}
@@ -66,7 +81,7 @@ def _download_all_tiles(Y_X):
         result = _download_one_tile(arg)
         if isinstance(result, tuple):
             tile_no, img = result
-            cached_tiles[tile_no] = img
+            cached_tiles[tile_no] = Image.open(img)
         elif isinstance(result, str):
             fail_tile_list.append(result)
 
@@ -99,7 +114,7 @@ def _concat_img_one_region(args):
         for tile in tiles:
             try:
                 # read the tile
-                img_temp = Image.open(files[tile])
+                img_temp = files[tile]
 
                 # get the tile's x and y coordinates
                 row, col = [int(x) for x in tile.split("_")]
@@ -190,7 +205,9 @@ def _concat_img_one_region(args):
         return int(region.index[0])
 
 
-def _concatenate_tiles(region_list, area_shp, cached_tiles):
+def _concatenate_tiles(
+    region_list, area_shp: gpd.GeoDataFrame, cached_tiles: Dict[str, Image.Image]
+):
     """
     Concatenate the tiles to obtain all the regional satellite images given the area.
     """
@@ -228,7 +245,11 @@ def _concatenate_tiles(region_list, area_shp, cached_tiles):
     return regional_imgs, fail_region_list
 
 
-def download_sateimgs(area_shp: gpd.GeoDataFrame) -> Dict[int, Image.Image]:
+def download_sateimgs(
+    area_shp: gpd.GeoDataFrame,
+    base_url: str = "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/41468",
+    Z: int = 15,
+) -> Dict[int, Image.Image]:
     """
     Download the satellite images for the given area from Esri living atlas.
 
@@ -246,10 +267,10 @@ def download_sateimgs(area_shp: gpd.GeoDataFrame) -> Dict[int, Image.Image]:
     area_shp, Y_X = get_YX_area(area_shp)
 
     # download the tiles
-    cached_tiles = {}
+    cached_tiles: Dict[str, Image.Image] = {}
     remaining = Y_X
     while remaining != []:
-        cached_tiles_tmp, fail_tile_list = _download_all_tiles(remaining)
+        cached_tiles_tmp, fail_tile_list = download_all_tiles(base_url, Z, remaining)
         cached_tiles.update(cached_tiles_tmp)
         remaining = fail_tile_list
 
