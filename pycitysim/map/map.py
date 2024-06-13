@@ -8,9 +8,11 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 import numpy as np
 import pyproj
 import shapely
+import stringcase
 from geojson import Feature
-from google.protobuf.json_format import ParseDict
+from google.protobuf.json_format import ParseDict, MessageToDict
 from pycityproto.city.geo.v2 import geo_pb2
+from pycityproto.city.map.v2 import map_pb2
 from pycityproto.city.routing.v2 import routing_pb2
 from pycityproto.city.routing.v2 import routing_service_pb2 as routing_service
 from pymongo import MongoClient
@@ -28,17 +30,21 @@ class Map:
 
     def __init__(
         self,
-        mongo_uri: str,
-        mongo_db: str,
-        mongo_coll: str,
+        mongo_uri: Optional[str] = None,
+        mongo_db: Optional[str] = None,
+        mongo_coll: Optional[str] = None,
         cache_dir: Optional[str] = None,
+        pb_path: Optional[str] = None,
     ):
         """
         Args:
-        - mongo_uri (str): mongo数据库的uri。MongoDB uri.
-        - mongo_db (str): 数据库名。Database name.
-        - mongo_coll (str): 集合名。Collection name.
+        - mongo_uri (Optional[str]): mongo数据库的uri。MongoDB uri.
+        - mongo_db (Optional[str]): 数据库名。Database name.
+        - mongo_coll (Optional[str]): 集合名。Collection name.
         - cache_dir (Optional[str]): 缓存目录, Defaults to None. Cache directory, Defaults to None.
+        - pb_path (Optional[str]): pb文件路径, Defaults to None. pb file path, Defaults to None.
+
+        Users can init Map with either mongo_uri, mongo_db, mongo_coll or pb_path.
         """
         if cache_dir is None:
             # 显示runtime warning
@@ -46,9 +52,39 @@ class Map:
                 "You are not using cache. "
                 "It is recommended to use cache when you are using map data."
             )
-        map_data = self._download_map_with_cache(
-            mongo_uri, mongo_db, mongo_coll, cache_dir
-        )
+        map_data = None
+        if mongo_uri is not None and mongo_db is not None and mongo_coll is not None:
+            map_data = self._download_map_with_cache(
+                mongo_uri, mongo_db, mongo_coll, cache_dir
+            )
+        if pb_path is not None:
+            with open(pb_path, "rb") as f:
+                pb = map_pb2.Map().FromString(f.read())
+            jsons = []
+            for field in pb.DESCRIPTOR.fields:
+                class_name = stringcase.spinalcase(field.message_type.name)
+                if field.label == field.LABEL_REPEATED:
+                    for pb_field in getattr(pb, field.name):
+                        data = MessageToDict(
+                            pb_field,
+                            including_default_value_fields=True,
+                            preserving_proto_field_name=True,
+                            use_integers_for_enums=True,
+                        )
+                        jsons.append({"class": class_name, "data": data})
+                else:
+                    data = MessageToDict(
+                        getattr(pb, field.name),
+                        including_default_value_fields=True,
+                        preserving_proto_field_name=True,
+                        use_integers_for_enums=True,
+                    )
+                    jsons.append({"class": class_name, "data": data})
+            map_data = self._parse_map(jsons)
+        if map_data is None:
+            raise ValueError(
+                "You must provide either (mongo_uri, mongo_db, mongo_coll) or pb_path"
+            )
 
         self.header: dict = map_data["header"]
         """
@@ -145,9 +181,9 @@ class Map:
             self._walking_lane_list,
         ) = self._build_geo_index()
 
-    def _download_map(self, uri: str, db: str, coll: str) -> Dict[str, Any]:
-        client = MongoClient(uri)
-        m = list(client[db][coll].find({}))
+    def _parse_map(self, m: List[Any]) -> Dict[str, Any]:
+        # client = MongoClient(uri)
+        # m = list(client[db][coll].find({}))
         header = None
         juncs = {}
         roads = {}
@@ -155,7 +191,8 @@ class Map:
         aois = {}
         pois = {}
         for d in m:
-            del d["_id"]
+            if "_id" in d:
+                del d["_id"]
             t = d["class"]
             data = d["data"]
             if t == "lane":
@@ -237,8 +274,13 @@ class Map:
     def _download_map_with_cache(
         self, uri: str, db: str, coll: str, cache_dir: Optional[str]
     ) -> Dict[str, Any]:
+        def _download_map(uri: str, db: str, coll: str):
+            client = MongoClient(uri)
+            m = list(client[db][coll].find({}))
+            return self._parse_map(m)
+
         if cache_dir is None:
-            return self._download_map(uri, db, coll)
+            return _download_map(uri, db, coll)
         # 如果cache_dir不存在，就创建
         os.makedirs(cache_dir, exist_ok=True)
         cache_path = os.path.join(cache_dir, f"{db}.{coll}.pkl")  # type: ignore
@@ -249,7 +291,7 @@ class Map:
             gc.enable()
             return m
         else:
-            m = self._download_map(uri, db, coll)
+            m = _download_map(uri, db, coll)
             with open(cache_path, "wb") as f:
                 pickle.dump(m, f)
             return m

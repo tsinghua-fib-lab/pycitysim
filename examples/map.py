@@ -1,11 +1,14 @@
 from pycitysim.map import Map
 
+# way 1: load from mongodb
 m = Map(
     mongo_uri="mongodb://username:password@url:port/",
     mongo_db="opencity",
     mongo_coll="map_beijing",
     cache_dir="./cache",
 )
+# way 2: load from pb file
+m = Map(pb_path="./cache/map.pb")
 
 # 查询junction的大致中心点
 # Query the approximate center of the junction
