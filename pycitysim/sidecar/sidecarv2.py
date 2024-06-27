@@ -2,20 +2,15 @@ import logging
 from time import sleep
 from typing import cast
 
-from deprecated import deprecated
 import grpc
-from pycityproto.city.sync.v1 import sync_service_pb2 as sync_service
-from pycityproto.city.sync.v1 import sync_service_pb2_grpc as sync_grpc
+from pycityproto.city.sync.v2 import sync_service_pb2 as sync_service
+from pycityproto.city.sync.v2 import sync_service_pb2_grpc as sync_grpc
 
 from ..utils.grpc import create_channel
 
 __all__ = ["OnlyClientSidecar"]
 
 
-@deprecated(
-    version="1.19.0",
-    reason="The protocol of city.sync.v1 cannot avoid the deadlock by RPC. Please use city.sync.v2 (implemented as OnlyClientSidecarV2) instead.",
-)
 class OnlyClientSidecar:
     """
     Sidecar框架服务（仅支持作为客户端，不支持对外提供gRPC服务）
@@ -60,19 +55,23 @@ class OnlyClientSidecar:
         logging.debug("get uri: %s for name=%s", url, name)
         return url
 
-    def step(self, step: int) -> bool:
+    def step(self, close: bool = False) -> bool:
         """
         同步器步进
         synchronizer step up
 
         Args:
-        - step (int): 同步器步进步数。number of synchronizer step up.
+        - close (bool): 是否退出模拟。Whether the simulation exited.
 
         Returns:
         - close (bool): 是否退出模拟。Whether the simulation exited.
         """
-        request = sync_service.StepRequest(name=self._name, step=step)
-        response = self._sync_stub.Step(request)
+        self._sync_stub.EnterStepSync(
+            sync_service.EnterStepSyncRequest(name=self._name)
+        )
+        response = self._sync_stub.ExitStepSync(
+            sync_service.ExitStepSyncRequest(name=self._name)
+        )
         return response.close
 
     def init(self) -> bool:
@@ -90,7 +89,7 @@ class OnlyClientSidecar:
         # > False
         ```
         """
-        return self.step(1)
+        return self.step()
 
     def close(self) -> bool:
         """
@@ -100,7 +99,7 @@ class OnlyClientSidecar:
         Returns:
         - close (bool): 是否退出模拟。Whether the simulation exited.
         """
-        return self.step(-1)
+        return self.step(True)
 
     def notify_step_ready(self):
         """
