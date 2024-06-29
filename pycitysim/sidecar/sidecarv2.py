@@ -70,7 +70,7 @@ class OnlyClientSidecar:
             sync_service.EnterStepSyncRequest(name=self._name)
         )
         response = self._sync_stub.ExitStepSync(
-            sync_service.ExitStepSyncRequest(name=self._name)
+            sync_service.ExitStepSyncRequest(name=self._name, close=close)
         )
         return response.close
 

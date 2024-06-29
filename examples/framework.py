@@ -39,7 +39,7 @@ async def main():
             )
             print("GetAoi:", resp)
         if i != 0:
-            close = s.step(STEP)  # Update阶段完成，通知模拟了STEP个tick
+            close = s.step()  # Update阶段完成，通知模拟了STEP个tick
         else:
             close = s.close()  # 退出
         if close:
