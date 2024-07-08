@@ -9,7 +9,6 @@ from .lane_service import LaneService
 from .road_service import RoadService
 from .social_service import SocialService
 from .economy_services import EconomyPersonService, EconomyOrgService
-from .event_service import EventService
 from .light_service import LightService
 
 from ..utils.grpc import create_aio_channel
@@ -44,7 +43,6 @@ class CityClient:
         self._social_service = SocialService(aio_channel)
         self._economy_person_service = EconomyPersonService(aio_channel)
         self._economy_org_service = EconomyOrgService(aio_channel)
-        self._event_service = EventService(aio_channel)
         self._light_service = LightService(aio_channel)
 
     @staticmethod
@@ -70,18 +68,6 @@ class CityClient:
         Simulator lane service submodule
         """
         return self._lane_service
-
-    @property
-    def agent_service(self):
-        """
-        模拟器智能体服务子模块（已弃用，请使用.person_service）
-        Simulator agent service submodule (deprecated, please use .person_service)
-        """
-        warnings.warn(
-            "agent_service is deprecated, use person_service instead",
-            DeprecationWarning,
-        )
-        return self._person_service
 
     @property
     def person_service(self):
@@ -130,14 +116,6 @@ class CityClient:
         Simulator economic service (organizational) submodule
         """
         return self._economy_org_service
-
-    @property
-    def event_service(self):
-        """
-        模拟器事件服务子模块
-        Simulator event service submodule
-        """
-        return self._event_service
 
     @property
     def light_service(self):

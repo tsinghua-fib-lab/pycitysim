@@ -64,10 +64,10 @@ class PersonService:
         Get person information
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.person.1.GetPersonResponse
+        - https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonResponse
         """
         if type(req) != person_service.GetPersonRequest:
             req = ParseDict(req, person_service.GetPersonRequest())
@@ -86,10 +86,10 @@ class PersonService:
         Add a new person
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.AddPersonRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.AddPersonRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.person.1.AddPersonResponse
+        - https://cityproto.sim.fiblab.net/#city.person.v1.AddPersonResponse
         """
         if type(req) != person_service.AddPersonRequest:
             req = ParseDict(req, person_service.AddPersonRequest())
@@ -108,16 +108,39 @@ class PersonService:
         set person's schedule
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.SetScheduleRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.SetScheduleRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.person.1.SetScheduleResponse
+        - https://cityproto.sim.fiblab.net/#city.person.v1.SetScheduleResponse
         """
         if type(req) != person_service.SetScheduleRequest:
             req = ParseDict(req, person_service.SetScheduleRequest())
         res = cast(
             Awaitable[person_service.SetScheduleResponse],
             self._aio_stub.SetSchedule(req),
+        )
+        return async_parse(res, dict_return)
+
+    def GetPersons(
+        self,
+        req: Union[person_service.GetPersonsRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[Any, Any, Union[Dict[str, Any], person_service.GetPersonsResponse]]:
+        """
+        获取多个person信息
+        Get information of multiple persons
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonsRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonsResponse
+        """
+        if type(req) != person_service.GetPersonsRequest:
+            req = ParseDict(req, person_service.GetPersonsRequest())
+        res = cast(
+            Awaitable[person_service.GetPersonsResponse],
+            self._aio_stub.GetPersons(req),
         )
         return async_parse(res, dict_return)
 
@@ -133,10 +156,10 @@ class PersonService:
         Get persons in a specific region
 
         Args:
-        - req (dict): https://cityproto.sim.fiblab.net/#city.person.1.GetPersonByLongLatBBoxRequest
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonByLongLatBBoxRequest
 
         Returns:
-        - https://cityproto.sim.fiblab.net/#city.person.1.GetPersonByLongLatBBoxResponse
+        - https://cityproto.sim.fiblab.net/#city.person.v1.GetPersonByLongLatBBoxResponse
         """
         if type(req) != person_service.GetPersonByLongLatBBoxRequest:
             req = ParseDict(req, person_service.GetPersonByLongLatBBoxRequest())
@@ -168,6 +191,31 @@ class PersonService:
         res = cast(
             Awaitable[person_service.GetAllVehiclesResponse],
             self._aio_stub.GetAllVehicles(req),
+        )
+        return async_parse(res, dict_return)
+
+    def ResetPersonPosition(
+        self,
+        req: Union[person_service.ResetPersonPositionRequest, dict],
+        dict_return: bool = True,
+    ) -> Coroutine[
+        Any, Any, Union[Dict[str, Any], person_service.ResetPersonPositionResponse]
+    ]:
+        """
+        重置人的位置（将停止当前正在进行的出行，转为sleep状态）
+        Reset person's position (stop the current trip and switch to sleep status)
+
+        Args:
+        - req (dict): https://cityproto.sim.fiblab.net/#city.person.v1.ResetPersonPositionRequest
+
+        Returns:
+        - https://cityproto.sim.fiblab.net/#city.person.v1.ResetPersonPositionResponse
+        """
+        if type(req) != person_service.ResetPersonPositionRequest:
+            req = ParseDict(req, person_service.ResetPersonPositionRequest())
+        res = cast(
+            Awaitable[person_service.ResetPersonPositionResponse],
+            self._aio_stub.ResetPersonPosition(req),
         )
         return async_parse(res, dict_return)
 

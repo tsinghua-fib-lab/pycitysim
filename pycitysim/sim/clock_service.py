@@ -25,9 +25,9 @@ class ClockService:
         dict_return: bool = True,
     ) -> Coroutine[Any, Any, Union[Dict[str, Any], clock_service.NowResponse]]:
         """
-        按照topic查询事件
-        Query events by topic
-        
+        获取当前的模拟时间请求
+        Getting current simulation clock
+
         Args:
         - req (dict): https://cityproto.sim.fiblab.net/#city.clock.v1.NowRequest
 
