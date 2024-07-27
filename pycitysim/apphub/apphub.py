@@ -207,7 +207,7 @@ class AppHubClient:
         agent_id: int,
         lnglat: List[float],
         geojsons: Optional[geojson.FeatureCollection] = None,
-        street_view: Optional[Image] = None,
+        street_view: Optional[list[Image]] = None,
         popup: Optional[str] = None,
     ):
         """
@@ -231,7 +231,10 @@ class AppHubClient:
         if geojsons is not None:
             body["geojsons"] = geojsons
         if street_view is not None:
-            body["streetView"] = _image2base64(street_view)
+            body["streetView"] = _image2base64(street_view[0])
+            body['views'] = []
+            for img in street_view:
+                body['views'].append(_image2base64(img))
         if popup is not None:
             body["popup"] = popup
 
